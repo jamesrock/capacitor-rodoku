@@ -7,6 +7,20 @@
 
 @font-face {
   font-family: 'Poppins';
+  font-weight: 700;
+  font-style: normal;
+  src: url('../assets/fonts/Poppins-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-weight: 800;
+  font-style: normal;
+  src: url('../assets/fonts/Poppins-ExtraBold.ttf');
+}
+
+@font-face {
+  font-family: 'Poppins';
   font-weight: 900;
   font-style: normal;
   src: url('../assets/fonts/Poppins-Black.ttf');
@@ -20,6 +34,9 @@
 }
 
 :root {
+  --square-size: 30px;
+  --block-size: 90px;
+  --puzzle-size: 270px;
   --background: white;
   --foreground: black;
 }
@@ -59,4 +76,36 @@ main {
   flex-direction: column;
   gap: 20px;
   text-align: center;
+}
+
+.puzzle {
+  display: flex;
+  flex-wrap: wrap;
+  width: var(--puzzle-size);
+}
+
+.block {
+  display: flex;
+  flex-wrap: wrap;
+  width: var(--block-size);
+  border: solid 1px black;
+  transition: transform 0.25s;
+  will-change: transform;
+  background-color: var(--background);
+}
+
+.square {
+  width: var(--square-size); 
+  height: var(--square-size);
+  font-size: var(--square-font-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: solid 1px black;
+  font-weight: 700;
+}
+
+.rotate {
+  transition: transform 0.25s;
+  will-change: transform;
 }

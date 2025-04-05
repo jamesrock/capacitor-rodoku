@@ -13,6 +13,18 @@ const puzzleSize = (blockSize*3) + (border*6);
 const puzzleNode = createNode('div', 'puzzle');
 const rotations = [0, 1, 2, 3];
 
+const checkForWin = () => {
+  let count = 0;
+  document.querySelectorAll('.block').forEach((node) => {
+    if(node.getAttribute('data-rotation')==='0') {
+      count ++;
+    };
+  });
+  if(count===9) {
+    console.log('SOLVED!');
+  };
+};
+
 puzzle.forEach((block) => {
   const blockNode = createNode('div', 'block');
   let rotation = getRandom(rotations);
@@ -24,6 +36,7 @@ puzzle.forEach((block) => {
       rotateNode.style.transform = `rotate(${-90*rotation}deg)`;
     });
     blockNode.setAttribute('data-rotation', (90*rotation) / 360 % 1);
+    checkForWin();
   };
   block.forEach((number) => {
     const squareNode = createNode('div', 'square');

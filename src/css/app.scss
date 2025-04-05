@@ -17,7 +17,7 @@
 :root {
   --background: white;
   --foreground: #333;
-  --border: gainsboro;
+  --border: silver;
   --square-size: 30px;
   --block-size: 90px;
   --puzzle-size: 270px;
@@ -78,6 +78,7 @@ main {
   transition: transform 300ms ease-out;
   will-change: transform;
   background-color: var(--background);
+  cursor: pointer;
 }
 
 .square {

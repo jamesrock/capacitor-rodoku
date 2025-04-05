@@ -1,26 +1,9 @@
 @import 'fonts';
 
-@keyframes flash {
-  0% {
-    opacity: 0;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
 :root {
   --background: floralwhite;
   --foreground: #333;
   --border: silver;
-  --square-size: 30px;
-  --block-size: 90px;
-  --puzzle-size: 270px;
   --puzzle-background: white;
   --glass: rgba(255, 255, 255, 0.8);
 }

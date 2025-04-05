@@ -5,7 +5,7 @@ const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 const getRandom = (target) => target[getRandomIndex(target)];
 const limit = (value, max) => value > max ? max : value;
 const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
-
+const colors = ['', 'orangered', 'deepskyblue', 'fuchsia', 'purple', 'green', 'brown', 'blue', 'indigo', 'black'];
 const puzzle = getRandom(puzzles);
 const root = document.querySelector(':root');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
@@ -14,6 +14,7 @@ const blockSize = (sqareSize*3) + (border*6);
 const puzzleSize = (blockSize*3) + (border*6);
 const puzzleNode = createNode('div', 'puzzle');
 const rotations = [0, 1, 2, 3];
+let zIndex = 0;
 
 const checkForWin = () => {
   let count = 0;
@@ -33,7 +34,9 @@ puzzle.forEach((block) => {
   const rotateNodes = [];
   const eventHandler = () => {
     rotation ++;
+    zIndex ++;
     blockNode.style.transform = `rotate(${90*rotation}deg)`;
+    blockNode.style.zIndex = zIndex;
     rotateNodes.forEach((rotateNode) => {
       rotateNode.style.transform = `rotate(${-90*rotation}deg)`;
     });
@@ -42,6 +45,7 @@ puzzle.forEach((block) => {
   };
   block.forEach((number) => {
     const squareNode = createNode('div', 'square');
+    // squareNode.style.color = colors[number];
     const rotateNode = createNode('span', 'rotate');
     rotateNode.innerHTML = number;
     squareNode.append(rotateNode);
@@ -58,4 +62,4 @@ document.body.append(puzzleNode);
 root.style.setProperty('--puzzle-size', `${puzzleSize}px`);
 root.style.setProperty('--block-size', `${blockSize}px`);
 root.style.setProperty('--square-size', `${sqareSize}px`);
-root.style.setProperty('--square-font-size', `${sqareSize - 16}px`);
+root.style.setProperty('--square-font-size', `${sqareSize - 10}px`);

@@ -15,8 +15,9 @@
 }
 
 :root {
-  --background: snow;
+  --background: white;
   --foreground: #333;
+  --border: gainsboro;
   --square-size: 30px;
   --block-size: 90px;
   --puzzle-size: 270px;
@@ -73,8 +74,8 @@ main {
   display: flex;
   flex-wrap: wrap;
   width: var(--block-size);
-  border: solid 1px var(--foreground);
-  transition: transform 0.25s;
+  border: solid 1px var(--border);
+  transition: transform 300ms ease-out;
   will-change: transform;
   background-color: var(--background);
 }
@@ -86,11 +87,13 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: solid 1px var(--foreground);
+  border: solid 1px var(--border);
   font-weight: 700;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .rotate {
-  transition: transform 0.25s;
+  transition: transform 300ms ease-out;
   will-change: transform;
 }

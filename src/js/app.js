@@ -26,6 +26,7 @@ const checkForWin = () => {
   });
   if(count===9) {
     solvedNode.innerHTML = `<div><h2>Solved!</h2><p>Tap to try again.</p></div>`;
+    solvedNode.setAttribute('data-hidden', false);
     setTimeout(() => {
       solvedNode.setAttribute('data-show', true);
     }, 500);
@@ -80,6 +81,7 @@ make();
 document.body.append(solvedNode);
 
 solvedNode.setAttribute('data-show', false);
+solvedNode.setAttribute('data-hidden', true);
 solvedNode.addEventListener('click', () => {
   make();
 });

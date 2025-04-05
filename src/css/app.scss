@@ -99,8 +99,12 @@ h2 {
   justify-content: center;
   align-items: center;
   text-align: center;
-
-  &[data-show="false"] {
+  transition: opacity .25s;
+  opacity: 0;
+  &[data-hidden="true"] {
     display: none;
+  }
+  &[data-show="true"] {
+    opacity: 1;
   }
 }

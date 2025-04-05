@@ -106,6 +106,7 @@ h2 {
 
 .solved {
   background-color: var(--glass);
+  backdrop-filter: blur(4px);
   position: absolute;
   inset: 0;
   z-index: 9999;

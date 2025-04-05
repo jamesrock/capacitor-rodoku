@@ -15,19 +15,21 @@
 }
 
 :root {
-  --background: white;
+  --background: floralwhite;
   --foreground: #333;
   --border: silver;
   --square-size: 30px;
   --block-size: 90px;
   --puzzle-size: 270px;
+  --puzzle-background: white;
   --glass: rgba(255, 255, 255, 0.8);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: black;
+    --background: #333;
     --foreground: white;
+    --puzzle-background: black;
     --glass: rgba(0, 0, 0, 0.8);
   }
 }
@@ -82,7 +84,7 @@ h2 {
   border: solid 1px var(--border);
   transition: transform 300ms ease-out;
   will-change: transform;
-  background-color: var(--background);
+  background-color: var(--puzzle-background);
   cursor: pointer;
 }
 

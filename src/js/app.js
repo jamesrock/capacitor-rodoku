@@ -26,9 +26,9 @@ const checkForWin = () => {
   });
   if(count===9) {
     solvedNode.innerHTML = `<div><h2>Solved!</h2><p>Tap to try again.</p></div>`;
-    solvedNode.setAttribute('data-hidden', false);
+    solvedNode.setAttribute('data-state', 'pre-show');
     setTimeout(() => {
-      solvedNode.setAttribute('data-show', true);
+      solvedNode.setAttribute('data-state', 'show');
     }, 500);
   };
 };
@@ -42,6 +42,7 @@ const make = () => {
   zIndex = 0;
   puzzleNode = createNode('div', 'puzzle');
   puzzle = getRandom(puzzles);
+  solvedNode.setAttribute('data-state', 'hidden');
 
   puzzle.forEach((block) => {
     const blockNode = createNode('div', 'block');
@@ -80,8 +81,6 @@ make();
 
 document.body.append(solvedNode);
 
-solvedNode.setAttribute('data-show', false);
-solvedNode.setAttribute('data-hidden', true);
 solvedNode.addEventListener('click', () => {
   make();
 });

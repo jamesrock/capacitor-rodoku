@@ -100,11 +100,13 @@ h2 {
   align-items: center;
   text-align: center;
   transition: opacity .25s;
-  opacity: 0;
-  &[data-hidden="true"] {
+  &[data-state="hidden"] {
     display: none;
   }
-  &[data-show="true"] {
+  &[data-state="pre-show"] {
+    opacity: 0;
+  }
+  &[data-state="show"] {
     opacity: 1;
   }
 }

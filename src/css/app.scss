@@ -1,44 +1,11 @@
-@font-face {
-  font-family: 'Poppins';
-  font-weight: 500;
-  font-style: normal;
-  src: url('../assets/fonts/Poppins-Medium.ttf');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-weight: 700;
-  font-style: normal;
-  src: url('../assets/fonts/Poppins-Bold.ttf');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-weight: 800;
-  font-style: normal;
-  src: url('../assets/fonts/Poppins-ExtraBold.ttf');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-weight: 900;
-  font-style: normal;
-  src: url('../assets/fonts/Poppins-Black.ttf');
-}
-
-@font-face {
-  font-family: 'Poppins';
-  font-weight: 900;
-  font-style: italic;
-  src: url('../assets/fonts/Poppins-BlackItalic.ttf');
-}
+@import 'fonts';
 
 :root {
+  --background: snow;
+  --foreground: #333;
   --square-size: 30px;
   --block-size: 90px;
   --puzzle-size: 270px;
-  --background: white;
-  --foreground: black;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -88,7 +55,7 @@ main {
   display: flex;
   flex-wrap: wrap;
   width: var(--block-size);
-  border: solid 1px black;
+  border: solid 1px var(--foreground);
   transition: transform 0.25s;
   will-change: transform;
   background-color: var(--background);
@@ -101,7 +68,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: solid 1px black;
+  border: solid 1px var(--foreground);
   font-weight: 700;
 }
 

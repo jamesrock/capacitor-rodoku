@@ -23,6 +23,7 @@ puzzle.forEach((block) => {
     rotateNodes.forEach((rotateNode) => {
       rotateNode.style.transform = `rotate(${-90*rotation}deg)`;
     });
+    blockNode.setAttribute('data-rotation', (90*rotation) / 360 % 1);
   };
   block.forEach((number) => {
     const squareNode = createNode('div', 'square');
@@ -42,4 +43,4 @@ document.body.append(puzzleNode);
 root.style.setProperty('--puzzle-size', `${puzzleSize}px`);
 root.style.setProperty('--block-size', `${blockSize}px`);
 root.style.setProperty('--square-size', `${sqareSize}px`);
-root.style.setProperty('--square-font-size', `${sqareSize - 20}px`);
+root.style.setProperty('--square-font-size', `${sqareSize - 16}px`);

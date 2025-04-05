@@ -1,12 +1,10 @@
-## Created with Capacitor Create App
+## rodoku
 
-This app was created using [`@capacitor/create-app`](https://github.com/ionic-team/create-capacitor-app),
-and comes with a very minimal shell for building an app.
+Built using [Capacitor](https://capacitorjs.com) with support from [Vite](https://vitejs.dev/).
 
-### Running this example
+`npm run start`  
+`npm run build`  
+`npx cap sync`  
+`npx cap open ios`  
 
-To run the provided example, you can use `npm start` command.
-
-```bash
-npm start
-```
+Runs on http://localhost:5173

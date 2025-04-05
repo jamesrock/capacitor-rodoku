@@ -4,10 +4,11 @@ import { createNode } from './utils';
 const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 const getRandom = (target) => target[getRandomIndex(target)];
 const limit = (value, max) => value > max ? max : value;
+const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
 
 const puzzle = getRandom(puzzles);
 const root = document.querySelector(':root');
-const sqareSize = limit(Math.floor(window.innerWidth / 10), 50);
+const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const border = 1;
 const blockSize = (sqareSize*3) + (border*6);
 const puzzleSize = (blockSize*3) + (border*6);

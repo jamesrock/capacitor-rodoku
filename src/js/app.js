@@ -23,7 +23,7 @@ const checkForWin = () => {
     };
   });
   if(count===9) {
-    console.log('SOLVED!');
+    puzzleNode.classList.add('solved');
   };
 };
 

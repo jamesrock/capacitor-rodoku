@@ -21,12 +21,14 @@
   --square-size: 30px;
   --block-size: 90px;
   --puzzle-size: 270px;
+  --glass: rgba(255, 255, 255, 0.8);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: black;
     --foreground: white;
+    --glass: rgba(0, 0, 0, 0.8);
   }
 }
 
@@ -60,14 +62,17 @@ main {
   text-align: center;
 }
 
+h2 {
+  text-transform: uppercase;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 32px;
+}
+
 .puzzle {
   display: flex;
   flex-wrap: wrap;
   width: var(--puzzle-size);
-
-  &.solved {
-    animation: flash 750ms infinite steps(1, end);
-  }
 }
 
 .block {
@@ -97,4 +102,19 @@ main {
 .rotate {
   transition: transform 300ms ease-out;
   will-change: transform;
+}
+
+.solved {
+  background-color: var(--glass);
+  position: absolute;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  &[data-show="false"] {
+    display: none;
+  }
 }

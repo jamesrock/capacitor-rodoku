@@ -6,15 +6,16 @@ const getRandom = (target) => target[getRandomIndex(target)];
 const limit = (value, max) => value > max ? max : value;
 const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
 const colors = ['', 'orangered', 'deepskyblue', 'fuchsia', 'purple', 'green', 'brown', 'blue', 'indigo', 'black'];
-const puzzle = getRandom(puzzles);
 const root = document.querySelector(':root');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const border = 1;
 const blockSize = (sqareSize*3) + (border*6);
 const puzzleSize = (blockSize*3) + (border*6);
-const puzzleNode = createNode('div', 'puzzle');
+const solvedNode = createNode('div', 'solved');
 const rotations = [0, 1, 2, 3];
-let zIndex = 0;
+let puzzleNode = null;
+let zIndex = null;
+let puzzle = null;
 
 const checkForWin = () => {
   let count = 0;
@@ -24,40 +25,64 @@ const checkForWin = () => {
     };
   });
   if(count===9) {
-    puzzleNode.classList.add('solved');
+    solvedNode.innerHTML = `<div><h2>Solved!</h2><p>Tap to try again.</p></div>`;
+    setTimeout(() => {
+      solvedNode.setAttribute('data-show', true);
+    }, 500);
   };
 };
 
-puzzle.forEach((block) => {
-  const blockNode = createNode('div', 'block');
-  let rotation = getRandom(rotations);
-  const rotateNodes = [];
-  const eventHandler = () => {
-    rotation ++;
-    zIndex ++;
-    blockNode.style.transform = `rotate(${90*rotation}deg)`;
-    blockNode.style.zIndex = zIndex;
-    rotateNodes.forEach((rotateNode) => {
-      rotateNode.style.transform = `rotate(${-90*rotation}deg)`;
-    });
-    blockNode.setAttribute('data-rotation', (90*rotation) / 360 % 1);
-    checkForWin();
-  };
-  block.forEach((number) => {
-    const squareNode = createNode('div', 'square');
-    // squareNode.style.color = colors[number];
-    const rotateNode = createNode('span', 'rotate');
-    rotateNode.innerHTML = number;
-    squareNode.append(rotateNode);
-    blockNode.append(squareNode);
-    rotateNodes.push(rotateNode);
-  });
-  puzzleNode.append(blockNode);
-  blockNode.addEventListener('click', eventHandler);
-  eventHandler();
-});
+const make = () => {
 
-document.body.append(puzzleNode);
+  if(puzzleNode) {
+    puzzleNode.parentNode.removeChild(puzzleNode);
+  };
+
+  zIndex = 0;
+  puzzleNode = createNode('div', 'puzzle');
+  puzzle = getRandom(puzzles);
+
+  puzzle.forEach((block) => {
+    const blockNode = createNode('div', 'block');
+    let rotation = getRandom(rotations);
+    const rotateNodes = [];
+    const eventHandler = () => {
+      rotation ++;
+      zIndex ++;
+      blockNode.style.transform = `rotate(${90*rotation}deg)`;
+      blockNode.style.zIndex = zIndex;
+      rotateNodes.forEach((rotateNode) => {
+        rotateNode.style.transform = `rotate(${-90*rotation}deg)`;
+      });
+      blockNode.setAttribute('data-rotation', (90*rotation) / 360 % 1);
+      checkForWin();
+    };
+    block.forEach((number) => {
+      const squareNode = createNode('div', 'square');
+      // squareNode.style.color = colors[number];
+      const rotateNode = createNode('span', 'rotate');
+      rotateNode.innerHTML = number;
+      squareNode.append(rotateNode);
+      blockNode.append(squareNode);
+      rotateNodes.push(rotateNode);
+    });
+    puzzleNode.append(blockNode);
+    blockNode.addEventListener('click', eventHandler);
+    eventHandler();
+  });
+
+  document.body.append(puzzleNode);
+
+};
+
+make();
+
+document.body.append(solvedNode);
+
+solvedNode.setAttribute('data-show', false);
+solvedNode.addEventListener('click', () => {
+  make();
+});
 
 root.style.setProperty('--puzzle-size', `${puzzleSize}px`);
 root.style.setProperty('--block-size', `${blockSize}px`);

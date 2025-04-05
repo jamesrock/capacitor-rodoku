@@ -1,5 +1,6 @@
 import { puzzles } from './puzzles';
 import { createNode } from './utils';
+import { SudokuFactory } from './SudokuFactory';
 
 const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 const getRandom = (target) => target[getRandomIndex(target)];
@@ -89,3 +90,7 @@ root.style.setProperty('--puzzle-size', `${puzzleSize}px`);
 root.style.setProperty('--block-size', `${blockSize}px`);
 root.style.setProperty('--square-size', `${sqareSize}px`);
 root.style.setProperty('--square-font-size', `${sqareSize - 10}px`);
+
+const factory = new SudokuFactory();
+
+console.log(factory.make());

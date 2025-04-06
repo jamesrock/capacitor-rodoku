@@ -20,6 +20,7 @@
 }
 
 :root {
+  --pre-background: white;
   --background: floralwhite;
   --foreground: #333;
   --border: silver;
@@ -29,6 +30,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --pre-background: black;
     --background: #333;
     --foreground: white;
     --puzzle-background: black;
@@ -44,15 +46,19 @@
 body {
   font-family: 'Poppins', sans-serif;
   font-size: 18px;
-  background-color: var(--background);
+  background-color: var(--pre-background);
   color: var(--foreground);
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100dvh;
   box-sizing: border-box;
+  transition: background-color 500ms ease-out;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  &[data-state="loaded"] {
+    background-color: var(--background);
+  }
 }
 
 main {

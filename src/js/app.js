@@ -78,11 +78,9 @@ const make = () => {
 
   setTimeout(() => {
     puzzleNode.setAttribute('data-state', 'show');
-  }, 250);
+  }, 500);
 
 };
-
-make();
 
 document.body.append(solvedNode);
 
@@ -96,3 +94,8 @@ root.style.setProperty('--square-size', `${sqareSize}px`);
 root.style.setProperty('--square-font-size', `${sqareSize - 10}px`);
 
 // console.log(factory.make());
+
+setTimeout(() => {
+  document.body.setAttribute('data-state', 'loaded');
+  make();
+}, 250);

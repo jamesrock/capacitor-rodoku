@@ -77,6 +77,11 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   width: var(--puzzle-size);
+  opacity: 0;
+  transition: opacity 1s ease-out;
+  &[data-state="show"] {
+    opacity: 1;
+  }
 }
 
 .block {

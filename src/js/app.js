@@ -76,6 +76,10 @@ const make = () => {
 
   document.body.append(puzzleNode);
 
+  setTimeout(() => {
+    puzzleNode.setAttribute('data-state', 'show');
+  }, 250);
+
 };
 
 make();

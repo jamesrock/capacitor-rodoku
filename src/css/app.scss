@@ -116,7 +116,7 @@ h2 {
 }
 
 .rotate {
-  transition: transform 300ms ease-out;
+  transition: transform 300ms ease-out, opacity 250ms ease-out;
   will-change: transform;
 }
 

@@ -6,7 +6,6 @@ const getRandom = (target) => target[getRandomIndex(target)];
 const limit = (value, max) => value > max ? max : value;
 const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
 const factory = new SudokuFactory();
-const colors = ['', 'orangered', 'deepskyblue', 'fuchsia', 'purple', 'green', 'brown', 'blue', 'indigo', 'black'];
 const root = document.querySelector(':root');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const border = 1;
@@ -28,9 +27,12 @@ const checkForWin = () => {
   if(count===9) {
     solvedNode.innerHTML = `<div><h2>Solved!</h2><p>Tap to try again.</p></div>`;
     solvedNode.setAttribute('data-state', 'pre-show');
+    document.querySelectorAll('.rotate').forEach((node) => {
+      node.style.opacity = 1;
+    });
     setTimeout(() => {
       solvedNode.setAttribute('data-state', 'show');
-    }, 500);
+    }, 1000);
   };
 };
 
@@ -62,9 +64,9 @@ const make = () => {
     };
     block.forEach((number) => {
       const squareNode = createNode('div', 'square');
-      // squareNode.style.color = colors[number];
       const rotateNode = createNode('span', 'rotate');
-      rotateNode.innerHTML = number;
+      rotateNode.innerHTML = number[0];
+      rotateNode.style.opacity = number[1];
       squareNode.append(rotateNode);
       blockNode.append(squareNode);
       rotateNodes.push(rotateNode);

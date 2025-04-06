@@ -56,7 +56,8 @@ body {
   transition: background-color 500ms ease-out;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  &[data-state="loaded"] {
+  &[data-state="loaded"],
+  .wordy {
     background-color: var(--background);
   }
 }

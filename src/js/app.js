@@ -24,6 +24,7 @@ const checkForWin = () => {
       count ++;
     };
   });
+  console.log(count);
   if(count===9) {
     solvedNode.innerHTML = `<div><h2>Solved!</h2><p>Tap to try again.</p></div>`;
     solvedNode.setAttribute('data-state', 'pre-show');

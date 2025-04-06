@@ -15,7 +15,8 @@
   "dependencies": {
     "@capacitor/core": "latest",
     "@capacitor/ios": "^7.2.0",
-    "sass": "^1.86.3"
+    "sass": "^1.86.3",
+    "sudoku-gen": "^1.0.2"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",

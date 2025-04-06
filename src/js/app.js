@@ -1,4 +1,3 @@
-import { puzzles } from './puzzles';
 import { createNode } from './utils';
 import { SudokuFactory } from './SudokuFactory';
 
@@ -72,7 +71,7 @@ const make = () => {
     });
     puzzleNode.append(blockNode);
     blockNode.addEventListener('click', eventHandler);
-    // eventHandler();
+    eventHandler();
   });
 
   document.body.append(puzzleNode);

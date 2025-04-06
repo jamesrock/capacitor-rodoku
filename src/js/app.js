@@ -6,6 +6,7 @@ const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 const getRandom = (target) => target[getRandomIndex(target)];
 const limit = (value, max) => value > max ? max : value;
 const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
+const factory = new SudokuFactory();
 const colors = ['', 'orangered', 'deepskyblue', 'fuchsia', 'purple', 'green', 'brown', 'blue', 'indigo', 'black'];
 const root = document.querySelector(':root');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
@@ -42,7 +43,7 @@ const make = () => {
 
   zIndex = 0;
   puzzleNode = createNode('div', 'puzzle');
-  puzzle = getRandom(puzzles);
+  puzzle = factory.make();
   solvedNode.setAttribute('data-state', 'hidden');
 
   puzzle.forEach((block) => {
@@ -71,7 +72,7 @@ const make = () => {
     });
     puzzleNode.append(blockNode);
     blockNode.addEventListener('click', eventHandler);
-    eventHandler();
+    // eventHandler();
   });
 
   document.body.append(puzzleNode);
@@ -91,6 +92,4 @@ root.style.setProperty('--block-size', `${blockSize}px`);
 root.style.setProperty('--square-size', `${sqareSize}px`);
 root.style.setProperty('--square-font-size', `${sqareSize - 10}px`);
 
-const factory = new SudokuFactory();
-
-console.log(factory.make());
+// console.log(factory.make());

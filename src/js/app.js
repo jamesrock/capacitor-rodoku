@@ -19,8 +19,10 @@ let puzzle = null;
 
 const checkForWin = () => {
   let count = 0;
-  document.querySelectorAll('.block').forEach((node) => {
-    if(node.getAttribute('data-rotation')==='0') {
+  let first = 0;
+  document.querySelectorAll('.block').forEach((node, index) => {
+    first = index===0 ? node.getAttribute('data-rotation') : first;
+    if(node.getAttribute('data-rotation')===first) {
       count ++;
     };
   });
@@ -95,8 +97,6 @@ root.style.setProperty('--puzzle-size', `${puzzleSize}px`);
 root.style.setProperty('--block-size', `${blockSize}px`);
 root.style.setProperty('--square-size', `${sqareSize}px`);
 root.style.setProperty('--square-font-size', `${sqareSize - 10}px`);
-
-// console.log(factory.make());
 
 setTimeout(() => {
   document.body.setAttribute('data-state', 'loaded');

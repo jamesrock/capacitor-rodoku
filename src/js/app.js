@@ -1,12 +1,11 @@
 import { createNode, timeToDisplay } from './utils';
-import { SudokuFactory } from './SudokuFactory';
+import { Sudoku } from './Sudoku';
 import { Storage } from './Storage';
 
 const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 const getRandom = (target) => target[getRandomIndex(target)];
 const limit = (value, max) => value > max ? max : value;
 const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
-const factory = new SudokuFactory();
 const root = document.querySelector(':root');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const border = 1;
@@ -22,16 +21,16 @@ let puzzle = null;
 let start = 0;
 
 const checkForWin = () => {
-  let count = 0;
-  let first = 0;
-  document.querySelectorAll('.block').forEach((node, index) => {
-    first = index===0 ? node.getAttribute('data-rotation') : first;
-    if(node.getAttribute('data-rotation')===first) {
-      count ++;
-    };
-  });
-  console.log(count);
-  if(count===9) {
+  const blocks = [...document.querySelectorAll('.block')];
+  const correct = blocks.filter((node) => {
+    return node.getAttribute('data-rotation')==='0';
+  }).length;
+  const opposite = blocks.filter((node) => {
+    return node.getAttribute('data-rotation')==='0.5';
+  }).length;
+  console.log('correct', correct);
+  console.log('opposite', opposite);
+  if(correct===9 || opposite===9) {
     const now = Date.now();
     const time = (now - start);
     if(best===0||time<best) {
@@ -45,12 +44,14 @@ const checkForWin = () => {
       <p class="retry">Tap to try again.</p>\
     </div>`;
     solvedNode.setAttribute('data-state', 'pre-show');
-    document.querySelectorAll('.rotate').forEach((node) => {
-      node.style.opacity = 1;
-    });
     setTimeout(() => {
-      solvedNode.setAttribute('data-state', 'show');
-    }, 1000);
+      document.querySelectorAll('.rotate').forEach((node) => {
+        node.style.opacity = 1;
+      });
+      setTimeout(() => {
+        solvedNode.setAttribute('data-state', 'show');
+      }, 750);
+    }, 300);
   };
 };
 
@@ -63,10 +64,10 @@ const make = () => {
   start = Date.now();
   zIndex = 0;
   puzzleNode = createNode('div', 'puzzle');
-  puzzle = factory.make();
+  puzzle = new Sudoku();
   solvedNode.setAttribute('data-state', 'hidden');
 
-  puzzle.forEach((block) => {
+  puzzle.data.forEach((block) => {
     const blockNode = createNode('div', 'block');
     let rotation = getRandom(rotations);
     const rotateNodes = [];

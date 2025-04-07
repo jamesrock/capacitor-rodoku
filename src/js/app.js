@@ -1,5 +1,6 @@
-import { createNode } from './utils';
+import { createNode, timeToDisplay } from './utils';
 import { SudokuFactory } from './SudokuFactory';
+import { Storage } from './Storage';
 
 const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 const getRandom = (target) => target[getRandomIndex(target)];
@@ -13,9 +14,12 @@ const blockSize = (sqareSize*3) + (border*6);
 const puzzleSize = (blockSize*3) + (border*6);
 const solvedNode = createNode('div', 'solved');
 const rotations = [0, 1, 2, 3];
+const storage = new Storage('me.jamesrock.rodoku');
+let best = storage.get('best') || 0;
 let puzzleNode = null;
 let zIndex = null;
 let puzzle = null;
+let start = 0;
 
 const checkForWin = () => {
   let count = 0;
@@ -28,7 +32,18 @@ const checkForWin = () => {
   });
   console.log(count);
   if(count===9) {
-    solvedNode.innerHTML = `<div><h2>Solved!</h2><p>Tap to try again.</p></div>`;
+    const now = Date.now();
+    const time = (now - start);
+    if(best===0||time<best) {
+      best = time;
+      storage.set('best', best);
+    };
+    solvedNode.innerHTML = `<div class="game-over-body">\
+      <h2>Solved!</h2>\
+      <p class="time">Time: ${timeToDisplay(time)}</p>\
+      <p class="best">Best: ${timeToDisplay(best)}</p>\
+      <p class="retry">Tap to try again.</p>\
+    </div>`;
     solvedNode.setAttribute('data-state', 'pre-show');
     document.querySelectorAll('.rotate').forEach((node) => {
       node.style.opacity = 1;
@@ -45,6 +60,7 @@ const make = () => {
     puzzleNode.parentNode.removeChild(puzzleNode);
   };
 
+  start = Date.now();
   zIndex = 0;
   puzzleNode = createNode('div', 'puzzle');
   puzzle = factory.make();
@@ -102,3 +118,7 @@ setTimeout(() => {
   document.body.setAttribute('data-state', 'loaded');
   make();
 }, 250);
+
+
+
+

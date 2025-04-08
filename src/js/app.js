@@ -7,9 +7,9 @@ const getRandom = (target) => target[getRandomIndex(target)];
 const limit = (value, max) => value > max ? max : value;
 const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
 const root = document.querySelector(':root');
-const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
+const squareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const border = 1;
-const blockSize = (sqareSize*3) + (border*6);
+const blockSize = (squareSize*3) + (border*6);
 const puzzleSize = (blockSize*3) + (border*6);
 const solvedNode = createNode('div', 'solved');
 const rotations = [0, 1, 2, 3];
@@ -112,14 +112,10 @@ solvedNode.addEventListener('click', () => {
 
 root.style.setProperty('--puzzle-size', `${puzzleSize}px`);
 root.style.setProperty('--block-size', `${blockSize}px`);
-root.style.setProperty('--square-size', `${sqareSize}px`);
-root.style.setProperty('--square-font-size', `${sqareSize - 10}px`);
+root.style.setProperty('--square-size', `${squareSize}px`);
+root.style.setProperty('--square-font-size', `${squareSize - 10}px`);
 
 setTimeout(() => {
   document.body.setAttribute('data-state', 'loaded');
   make();
 }, 250);
-
-
-
-

@@ -1,36 +1,37 @@
 import { createNode, timeToDisplay } from './utils';
 import { Sudoku } from './Sudoku';
 import { Storage } from './Storage';
+import { Rounder } from './Rounder';
 
-const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
-const getRandom = (target) => target[getRandomIndex(target)];
 const limit = (value, max) => value > max ? max : value;
 const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
 const root = document.querySelector(':root');
-const squareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
+const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const border = 1;
-const blockSize = (squareSize*3) + (border*6);
+const blockSize = (sqareSize*3) + (border*6);
 const puzzleSize = (blockSize*3) + (border*6);
 const solvedNode = createNode('div', 'solved');
-const rotations = [0, 1, 2, 3];
-const storage = new Storage('me.jamesrock.rodoku');
+const storage = new Storage('me.jamesrock.codoku');
+const rounder = new Rounder(40);
 let best = storage.get('best') || 0;
 let puzzleNode = null;
-let zIndex = null;
 let puzzle = null;
 let start = 0;
+let touch = null;
+let xMovement = 0;
+let yMovement = 0;
+let activeX = 0;
+let activeY = 0;
+let squares;
+let number = 1;
 
 const checkForWin = () => {
-  const blocks = [...document.querySelectorAll('.block')];
+  const blocks = [...document.querySelectorAll('.square')];
   const correct = blocks.filter((node) => {
-    return node.getAttribute('data-rotation')==='0';
-  }).length;
-  const opposite = blocks.filter((node) => {
-    return node.getAttribute('data-rotation')==='0.5';
+    return node.getAttribute('data-value')===puzzle.solution[node.getAttribute('data-id')];
   }).length;
   console.log('correct', correct);
-  console.log('opposite', opposite);
-  if(correct===9 || opposite===9) {
+  if(correct===81) {
     const now = Date.now();
     const time = (now - start);
     if(best===0||time<best) {
@@ -44,14 +45,11 @@ const checkForWin = () => {
       <p class="retry">Tap to try again.</p>\
     </div>`;
     solvedNode.setAttribute('data-state', 'pre-show');
-    setTimeout(() => {
-      document.querySelectorAll('.rotate').forEach((node) => {
-        node.style.opacity = 1;
-      });
+    // setTimeout(() => {
       setTimeout(() => {
         solvedNode.setAttribute('data-state', 'show');
       }, 750);
-    }, 300);
+    // }, 300);
   };
 };
 
@@ -62,38 +60,23 @@ const make = () => {
   };
 
   start = Date.now();
-  zIndex = 0;
   puzzleNode = createNode('div', 'puzzle');
   puzzle = new Sudoku();
   solvedNode.setAttribute('data-state', 'hidden');
 
   puzzle.data.forEach((block) => {
     const blockNode = createNode('div', 'block');
-    let rotation = getRandom(rotations);
-    const rotateNodes = [];
-    const eventHandler = () => {
-      rotation ++;
-      zIndex ++;
-      blockNode.style.transform = `rotate(${90*rotation}deg)`;
-      blockNode.style.zIndex = zIndex;
-      rotateNodes.forEach((rotateNode) => {
-        rotateNode.style.transform = `rotate(${-90*rotation}deg)`;
-      });
-      blockNode.setAttribute('data-rotation', (90*rotation) / 360 % 1);
-      checkForWin();
-    };
     block.forEach((number) => {
+      console.log(number);
       const squareNode = createNode('div', 'square');
-      const rotateNode = createNode('span', 'rotate');
-      rotateNode.innerHTML = number[0];
-      rotateNode.style.opacity = number[1];
-      squareNode.append(rotateNode);
+      squareNode.setAttribute('data-coord', number[2]);
+      squareNode.setAttribute('data-id', number[3]);
+      squareNode.setAttribute('data-locked', number[1]);
+      squareNode.setAttribute('data-value', number[1] ? number[0] : '0');
+      squareNode.innerHTML = number[1] ? number[0] : '';
       blockNode.append(squareNode);
-      rotateNodes.push(rotateNode);
     });
     puzzleNode.append(blockNode);
-    blockNode.addEventListener('click', eventHandler);
-    eventHandler();
   });
 
   document.body.append(puzzleNode);
@@ -102,6 +85,67 @@ const make = () => {
     puzzleNode.setAttribute('data-state', 'show');
   }, 500);
 
+  squares = document.querySelectorAll(`.square`);
+  highlight();
+
+};
+
+const move = (direction) => {
+
+  console.log(`move(${direction})`);
+
+  switch(direction) {
+    case 'up':
+      if(activeY===0) {return};
+      activeY -= 1;
+    break;
+    case 'down':
+      if(activeY===8) {return};
+      activeY += 1;
+    break;
+    case 'left':
+      if(activeX===0) {return};
+      activeX -= 1;
+    break;
+    case 'right':
+      if(activeX===8) {return};
+      activeX += 1;
+    break;
+  };
+
+  highlight();
+
+};
+
+const highlight = () => {
+  squares.forEach((node) => {
+    node.classList.remove('active');
+  });
+  const active = document.querySelector(`.square[data-coord="x${activeX}y${activeY}"]`);
+  active.classList.add('active');
+  number = parseFloat(active.getAttribute('data-value'));
+  increment();
+};
+
+const fill = () => {
+  console.log(`fill(${number})`);
+  const active = document.querySelector(`.square.active`);
+  if(active.getAttribute('data-locked')==='1') {
+    return;
+  };
+  active.innerHTML = number === 0 ? '' : number;
+  active.setAttribute('data-value', number);
+  increment();
+  checkForWin();
+};
+
+const increment = () => {
+  if(number===9) {
+    number = 0;
+  }
+  else {
+    number ++;
+  };
 };
 
 document.body.append(solvedNode);
@@ -112,10 +156,66 @@ solvedNode.addEventListener('click', () => {
 
 root.style.setProperty('--puzzle-size', `${puzzleSize}px`);
 root.style.setProperty('--block-size', `${blockSize}px`);
-root.style.setProperty('--square-size', `${squareSize}px`);
-root.style.setProperty('--square-font-size', `${squareSize - 10}px`);
+root.style.setProperty('--square-size', `${sqareSize}px`);
+root.style.setProperty('--square-font-size', `${sqareSize - 10}px`);
 
 setTimeout(() => {
   document.body.setAttribute('data-state', 'loaded');
   make();
 }, 250);
+
+document.addEventListener('touchstart', function(e) {
+		
+  touch = e.touches[0];
+  xMovement = 0;
+  yMovement = 0;
+
+  e.preventDefault();
+
+}, {passive: false});
+
+document.addEventListener('touchmove', function(e) {
+  
+  const {clientX: originalClientX, clientY: originalClientY} = touch;
+  const {clientX, clientY} = e.touches[0];
+  const x = rounder.round(clientX - originalClientX);
+  const y = rounder.round(clientY - originalClientY);
+
+  if(x !== xMovement) {
+    this.dispatchEvent(new Event(x > xMovement ? 'drag-right' : 'drag-left'));
+  };
+
+  if(y !== yMovement) {
+    this.dispatchEvent(new Event(y > yMovement ? 'drag-down' : 'drag-up'));
+  };
+
+  xMovement = x;
+  yMovement = y;
+
+});
+
+document.addEventListener('touchend', function() {
+
+  const noMovement = (xMovement===0 && yMovement===0);
+
+  if(noMovement) {
+    fill();
+  };
+
+});
+
+document.addEventListener('drag-down', function() {
+  move('down');
+});
+
+document.addEventListener('drag-up', function() {
+  move('up');
+});
+
+document.addEventListener('drag-right', function() {
+  move('right');
+});
+
+document.addEventListener('drag-left', function() {
+  move('left');
+});

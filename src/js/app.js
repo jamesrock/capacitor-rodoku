@@ -76,7 +76,7 @@ const make = () => {
   puzzle.data.forEach((block) => {
     const blockNode = createNode('div', 'block');
     block.forEach((number) => {
-      console.log(number);
+      // console.log(number);
       const squareNode = createNode('div', 'square');
       squareNode.setAttribute('data-coord', number[2]);
       squareNode.setAttribute('data-id', number[3]);
@@ -235,7 +235,7 @@ document.addEventListener('drag-left', () => {
   move('left');
 });
 
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', (e) => {
 
   if(isValidKey(e.code, directionKeys)) {
     move(directionKeysMap[e.code]);

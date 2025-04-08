@@ -27,18 +27,19 @@
   --puzzle-background: white;
   --glass: rgba(255, 255, 255, 0.8);
   --highlight-color: yellow;
-  --input-color: saddlebrown;
+  --input-color: rgb(122, 86, 198);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --pre-background: black;
     --background: #333;
-    --foreground: white;
+    --foreground: snow;
+    --border: grey;
     --puzzle-background: black;
     --glass: rgba(0, 0, 0, 0.8);
-    --input-color: burlywood;
     --highlight-color: rgb(69, 69, 21);
+    --input-color: rgb(232, 163, 60);
   }
 }
 

@@ -1,4 +1,4 @@
-import { createNode, timeToDisplay } from './utils';
+import { createNode, isValidKey, timeToDisplay } from './utils';
 import { Sudoku } from './Sudoku';
 import { Storage } from './Storage';
 import { Rounder } from './Rounder';
@@ -13,6 +13,14 @@ const puzzleSize = (blockSize*3) + (border*6);
 const solvedNode = createNode('div', 'solved');
 const storage = new Storage('me.jamesrock.rodoku');
 const rounder = new Rounder(40);
+const rotateKeys = ['Space'];
+const directionKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+const directionKeysMap = {
+  'ArrowUp': 'up',
+  'ArrowDown': 'down',
+  'ArrowLeft': 'left',
+  'ArrowRight': 'right'
+};
 let best = storage.get('best') || 0;
 let puzzleNode = null;
 let puzzle = null;
@@ -225,4 +233,16 @@ document.addEventListener('drag-right', () => {
 
 document.addEventListener('drag-left', () => {
   move('left');
+});
+
+document.addEventListener('keydown', function(e) {
+
+  if(isValidKey(e.code, directionKeys)) {
+    move(directionKeysMap[e.code]);
+  };
+
+  if(isValidKey(e.code, rotateKeys)) {
+    fill();
+  };
+
 });

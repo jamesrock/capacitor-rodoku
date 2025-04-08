@@ -11,7 +11,7 @@ const border = 1;
 const blockSize = (sqareSize*3) + (border*6);
 const puzzleSize = (blockSize*3) + (border*6);
 const solvedNode = createNode('div', 'solved');
-const storage = new Storage('me.jamesrock.codoku');
+const storage = new Storage('me.jamesrock.rodoku');
 const rounder = new Rounder(40);
 let best = storage.get('best') || 0;
 let puzzleNode = null;
@@ -24,6 +24,7 @@ let activeX = 0;
 let activeY = 0;
 let squares;
 let number = 1;
+let gameOver = false;
 
 const checkForWin = () => {
   const blocks = [...document.querySelectorAll('.square')];
@@ -32,6 +33,7 @@ const checkForWin = () => {
   }).length;
   console.log('correct', correct);
   if(correct===81) {
+    gameOver = true;
     const now = Date.now();
     const time = (now - start);
     if(best===0||time<best) {
@@ -45,11 +47,9 @@ const checkForWin = () => {
       <p class="retry">Tap to try again.</p>\
     </div>`;
     solvedNode.setAttribute('data-state', 'pre-show');
-    // setTimeout(() => {
-      setTimeout(() => {
-        solvedNode.setAttribute('data-state', 'show');
-      }, 750);
-    // }, 300);
+    setTimeout(() => {
+      solvedNode.setAttribute('data-state', 'show');
+    }, 250);
   };
 };
 
@@ -59,6 +59,7 @@ const make = () => {
     puzzleNode.parentNode.removeChild(puzzleNode);
   };
 
+  gameOver = true;
   start = Date.now();
   puzzleNode = createNode('div', 'puzzle');
   puzzle = new Sudoku();
@@ -165,6 +166,8 @@ setTimeout(() => {
 }, 250);
 
 document.addEventListener('touchstart', function(e) {
+
+  if(gameOver) {return};
 		
   touch = e.touches[0];
   xMovement = 0;
@@ -175,6 +178,8 @@ document.addEventListener('touchstart', function(e) {
 }, {passive: false});
 
 document.addEventListener('touchmove', function(e) {
+
+  if(gameOver) {return};
   
   const {clientX: originalClientX, clientY: originalClientY} = touch;
   const {clientX, clientY} = e.touches[0];
@@ -196,6 +201,8 @@ document.addEventListener('touchmove', function(e) {
 
 document.addEventListener('touchend', function() {
 
+  if(gameOver) {return};
+
   const noMovement = (xMovement===0 && yMovement===0);
 
   if(noMovement) {
@@ -204,18 +211,18 @@ document.addEventListener('touchend', function() {
 
 });
 
-document.addEventListener('drag-down', function() {
+document.addEventListener('drag-down', () => {
   move('down');
 });
 
-document.addEventListener('drag-up', function() {
+document.addEventListener('drag-up', () => {
   move('up');
 });
 
-document.addEventListener('drag-right', function() {
+document.addEventListener('drag-right', () => {
   move('right');
 });
 
-document.addEventListener('drag-left', function() {
+document.addEventListener('drag-left', () => {
   move('left');
 });

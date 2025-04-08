@@ -39,7 +39,7 @@ const brown = [
 
 export class Sudoku {
   constructor() {
-    const sudoku = getSudoku('easy');
+    const sudoku = getSudoku('medium');
     const puzzle = this.puzzle = sudoku.puzzle.split('');
     const solution = this.solution = sudoku.solution.split('');
     this.data = [

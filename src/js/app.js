@@ -67,7 +67,7 @@ const make = () => {
     puzzleNode.parentNode.removeChild(puzzleNode);
   };
 
-  gameOver = true;
+  gameOver = false;
   start = Date.now();
   puzzleNode = createNode('div', 'puzzle');
   puzzle = new Sudoku();

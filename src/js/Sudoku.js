@@ -1,10 +1,7 @@
 import { getSudoku } from 'sudoku-gen';
-import { shuffle } from './utils';
 
 const mapper = (puzzle, solution) => {
-  const targets = shuffle([0, 1, 2, 3, 5, 6, 7, 8]).splice(0, 4);
-  return (item, index) => {
-    // return targets.includes(index) ? [solution[item], 0] : [solution[item], 1];
+  return (item) => {
     return [`${solution[item]}`, puzzle[item]==='-' ? 0 : 1, brown[item], item];
   };
 };

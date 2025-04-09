@@ -166,7 +166,7 @@ solvedNode.addEventListener('click', () => {
 root.style.setProperty('--puzzle-size', `${puzzleSize}px`);
 root.style.setProperty('--block-size', `${blockSize}px`);
 root.style.setProperty('--square-size', `${sqareSize}px`);
-root.style.setProperty('--square-font-size', `${sqareSize - 10}px`);
+root.style.setProperty('--square-font-size', `${sqareSize - 8}px`);
 
 setTimeout(() => {
   document.body.setAttribute('data-state', 'loaded');

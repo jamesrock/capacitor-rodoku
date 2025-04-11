@@ -45,16 +45,16 @@ const standardOverlay = [
   [[6, 6], [9, 6], [9, 9], [6, 9], [6, 6]]
 ];
 
-const standardBoxes = [
-  [[0, 0, 0], [1, 0, 1], [2, 0, 2], [0, 1, 9], [1, 1, 10], [2, 1, 11], [0, 2, 18], [1, 2, 19], [2, 2, 20]],
-  [[3, 0, 3], [4, 0, 4], [5, 0, 5], [3, 1, 12], [4, 1, 13], [5, 1, 14], [3, 2, 21], [4, 2, 22], [5, 2, 23]],
-  [[6, 0, 6], [7, 0, 7], [8, 0, 8], [6, 1, 15], [7, 1, 16], [8, 1, 17], [6, 2, 24], [7, 2, 25], [8, 2, 26]],
-  [[0, 3, 27], [1, 3, 28], [2, 3, 29], [0, 4, 36], [1, 4, 37], [2, 4, 38], [0, 5, 45], [1, 5, 46], [2, 5, 47]],
-  [[3, 3, 30], [4, 3, 31], [5, 3, 32], [3, 4, 39], [4, 4, 40], [5, 4, 41], [3, 5, 48], [4, 5, 49], [5, 5, 50]],
-  [[6, 3, 33], [7, 3, 34], [8, 3, 35], [6, 4, 42], [7, 4, 43], [8, 4, 44], [6, 5, 51], [7, 5, 52], [8, 5, 53]],
-  [[0, 6, 54], [1, 6, 55], [2, 6, 56], [0, 7, 63], [1, 7, 64], [2, 7, 65], [0, 8, 72], [1, 8, 73], [2, 8, 74]],
-  [[3, 6, 57], [4, 6, 58], [5, 6, 59], [3, 7, 66], [4, 7, 67], [5, 7, 68], [3, 8, 75], [4, 8, 76], [5, 8, 77]],
-  [[6, 6, 60], [7, 6, 61], [8, 6, 62], [6, 7, 69], [7, 7, 70], [8, 7, 71], [6, 8, 78], [7, 8, 79], [8, 8, 80]]
+const tileMap = [
+  [0, 0, 0], [1, 0, 1], [2, 0, 2], [0, 1, 9], [1, 1, 10], [2, 1, 11], [0, 2, 18], [1, 2, 19], [2, 2, 20],
+  [3, 0, 3], [4, 0, 4], [5, 0, 5], [3, 1, 12], [4, 1, 13], [5, 1, 14], [3, 2, 21], [4, 2, 22], [5, 2, 23],
+  [6, 0, 6], [7, 0, 7], [8, 0, 8], [6, 1, 15], [7, 1, 16], [8, 1, 17], [6, 2, 24], [7, 2, 25], [8, 2, 26],
+  [0, 3, 27], [1, 3, 28], [2, 3, 29], [0, 4, 36], [1, 4, 37], [2, 4, 38], [0, 5, 45], [1, 5, 46], [2, 5, 47],
+  [3, 3, 30], [4, 3, 31], [5, 3, 32], [3, 4, 39], [4, 4, 40], [5, 4, 41], [3, 5, 48], [4, 5, 49], [5, 5, 50],
+  [6, 3, 33], [7, 3, 34], [8, 3, 35], [6, 4, 42], [7, 4, 43], [8, 4, 44], [6, 5, 51], [7, 5, 52], [8, 5, 53],
+  [0, 6, 54], [1, 6, 55], [2, 6, 56], [0, 7, 63], [1, 7, 64], [2, 7, 65], [0, 8, 72], [1, 8, 73], [2, 8, 74],
+  [3, 6, 57], [4, 6, 58], [5, 6, 59], [3, 7, 66], [4, 7, 67], [5, 7, 68], [3, 8, 75], [4, 8, 76], [5, 8, 77],
+  [6, 6, 60], [7, 6, 61], [8, 6, 62], [6, 7, 69], [7, 7, 70], [8, 7, 71], [6, 8, 78], [7, 8, 79], [8, 8, 80]
 ];
 
 export class Sudoku {
@@ -72,11 +72,6 @@ export class Sudoku {
 
       this.numbers = solution;
       this.clues = puzzle;
-      this.boxes = standardBoxes.map((box) => {
-        return box.map((data) => {
-          return [data[0], data[1], new PuzzleTile(this, brown[data[2]], data[2])];
-        });
-      });
       this.overlay = standardOverlay;
       this.data = sudoku;
 
@@ -86,24 +81,16 @@ export class Sudoku {
       // const puzzle = saved ? saved : getRandom(puzzles);
       const puzzle = puzzles[puzzles.length-1];
 
-      this.numbers = puzzle[2];
-      this.clues = puzzle[3];
-      this.boxes = puzzle[0].map((box) => {
-        return box.map((data) => {
-          return [data[0], data[1], new PuzzleTile(this, brown[data[2]], data[2])];
-        });
-      });
-      this.overlay = puzzle[1];
+      this.overlay = puzzle[0];
+      this.numbers = puzzle[1];
+      this.clues = puzzle[2];
       this.data = puzzle;
 
     };
 
-    this.tiles = this.boxes.flatMap((box) => {
-      return box.map((data) => {
-        return data[2];
-      });
+    this.tiles = tileMap.map((data) => {
+      return new PuzzleTile(this, data[0], data[1], brown[data[2]], data[2]);
     });
-
     this.type = type;
     this.solvedHandler = solvedHandler;
 
@@ -127,30 +114,26 @@ export class Sudoku {
 			(size * 9)
 		);
 
-		this.boxes.forEach((box) => {
+		this.tiles.forEach((tile) => {
 
-			box.forEach((tile) => {
+			ctx.fillStyle = tile.highlight ? `rgb(255,255,0)` : `rgb(255,255,255)`;
+			
+			ctx.fillRect(
+				(tile.x * size) + offset, 
+				(tile.y * size) + offset, 
+				size, 
+				size
+			);
 
-				ctx.fillStyle = tile[2].highlight ? `rgb(255,255,0)` : `rgb(255,255,255)`;
-				
-				ctx.fillRect(
-					(tile[0] * size) + offset, 
-					(tile[1] * size) + offset, 
-					size, 
-					size
-				);
-
-				ctx.font = `900 ${size-10}px Poppins`;
-				ctx.textAlign = 'center';
-				ctx.fillStyle = tile[2].clue ? 'rgb(0,0,0)' : 'rgb(148,0,211)';
-				
-				ctx.fillText(
-					tile[2].display===0?'':tile[2].display, 
-					(tile[0] * size) + (size/2) + offset, 
-					(tile[1] * size) + (size - 17) + offset
-				);
-				
-			});
+			ctx.font = `900 ${size-10}px Poppins`;
+			ctx.textAlign = 'center';
+			ctx.fillStyle = tile.clue ? 'rgb(0,0,0)' : 'rgb(148,0,211)';
+			
+			ctx.fillText(
+				tile.display===0?'':tile.display, 
+				(tile.x * size) + (size/2) + offset, 
+				(tile.y * size) + (size-17) + offset
+			);
 
 		});
 
@@ -266,13 +249,15 @@ export class Sudoku {
 };
 
 class PuzzleTile {
-	constructor(puzzle, name, index) {
+	constructor(puzzle, x, y, name, index) {
 
 		this.puzzle = puzzle;
 		this.name = name;
 		this.value = this.puzzle.numbers[index];
 		this.clue = this.puzzle.clues[index];
 		this.display = this.clue ? this.value : 0;
+		this.x = x;
+		this.y = y;
 
 	};
 	increment() {

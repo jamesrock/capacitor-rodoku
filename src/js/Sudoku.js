@@ -83,16 +83,17 @@ export class Sudoku {
     }
     else if(type==='jigsaw') {
 
-      const puzzle = saved ? saved : getRandom(puzzles);
+      // const puzzle = saved ? saved : getRandom(puzzles);
+      const puzzle = puzzles[puzzles.length-1];
 
-      this.numbers = puzzle[1];
-      this.clues = puzzle[2];
+      this.numbers = puzzle[2];
+      this.clues = puzzle[3];
       this.boxes = puzzle[0].map((box) => {
         return box.map((data) => {
           return [data[0], data[1], new PuzzleTile(this, brown[data[2]], data[2])];
         });
       });
-      this.overlay = puzzle[3];
+      this.overlay = puzzle[1];
       this.data = puzzle;
 
     };
@@ -126,24 +127,11 @@ export class Sudoku {
 			(size * 9)
 		);
 
-		this.boxes.forEach((box, boxIndex) => {
+		this.boxes.forEach((box) => {
 
 			box.forEach((tile) => {
-				
-				ctx.fillStyle = `rgb(255,255,255)`;
-				ctx.fillRect(
-					(tile[0] * size) + offset, 
-					(tile[1] * size) + offset, 
-					size, 
-					size
-				);
 
-        if(this.type==='jigsaw') {
-          ctx.fillStyle = tile[2].highlight ? `rgba(255,255,0,0.5)` : `rgba(${colours[boxIndex].join(',')},0.5)`;
-        }
-        else {
-          ctx.fillStyle = tile[2].highlight ? `rgb(255,255,0)` : `rgb(255,255,255)`;
-        };
+				ctx.fillStyle = tile[2].highlight ? `rgb(255,255,0)` : `rgb(255,255,255)`;
 				
 				ctx.fillRect(
 					(tile[0] * size) + offset, 
@@ -170,7 +158,7 @@ export class Sudoku {
 			coords.forEach((bob, index) => {
 				ctx.lineWidth = 8;
 				ctx.lineCap = 'square';
-				ctx.strokeStyle = `rgb(212,212,212)`;
+				ctx.strokeStyle = `rgb(0,0,0)`;
 				ctx.moveTo(
 					(bob[0]*size) + offset, 
 					(bob[1]*size) + offset
@@ -188,7 +176,7 @@ export class Sudoku {
 		});
 
 		[1, 2, 3, 4, 5, 6, 7, 8].forEach((x) => {
-			ctx.lineWidth = 4;
+			ctx.lineWidth = 2;
 			ctx.lineCap = 'square';
 			ctx.moveTo(
 				(x*size) + offset,
@@ -202,7 +190,7 @@ export class Sudoku {
 		});
 
 		[1, 2, 3, 4, 5, 6, 7, 8].forEach((y) => {
-			ctx.lineWidth = 4;
+			ctx.lineWidth = 2;
 			ctx.lineCap = 'square';
 			ctx.moveTo(
 				offset,

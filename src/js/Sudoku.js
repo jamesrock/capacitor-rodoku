@@ -255,7 +255,6 @@ export class Sudoku {
 		active.highlight = true;
 	};
 	fill() {
-		console.log(`fill()`);
 		const active = this.getActive();
 		active.increment();
 		this.checkForWin();

@@ -18,7 +18,7 @@ const directionKeysMap = {
   'ArrowLeft': 'left',
   'ArrowRight': 'right'
 };
-const type = 'standard';
+const type = 'jigsaw';
 const savedGame = storage.get('saved');
 let best = storage.get('best') || 0;
 let puzzle = null;

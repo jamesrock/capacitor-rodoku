@@ -1,13 +1,9 @@
 import { getSudoku } from 'sudoku-gen';
 import { puzzles } from './puzzles';
-import { inflate, makeEven } from './utils';
+import { inflate } from './utils';
 
 const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 const getRandom = (target) => target[getRandomIndex(target)];
-
-const colours = [
-	[199, 217, 140], [229, 205, 239], [192, 230, 250], [188, 223, 199], [212, 208, 241], [250, 216, 234], [247, 214, 193], [255, 251, 196], [197, 210, 244]
-];
 
 const fake = [
   1, 2, 3, 1, 2, 3, 1, 2, 3,
@@ -19,18 +15,6 @@ const fake = [
   1, 2, 3, 1, 2, 3, 1, 2, 3,
   4, 5, 6, 4, 5, 6, 4, 5, 6,
   7, 8, 9, 7, 8, 9, 7, 8, 9
-];
-
-const brown = [
-  'x0y0', 'x1y0', 'x2y0', 'x3y0', 'x4y0', 'x5y0', 'x6y0', 'x7y0', 'x8y0',
-  'x0y1', 'x1y1', 'x2y1', 'x3y1', 'x4y1', 'x5y1', 'x6y1', 'x7y1', 'x8y1',
-  'x0y2', 'x1y2', 'x2y2', 'x3y2', 'x4y2', 'x5y2', 'x6y2', 'x7y2', 'x8y2',
-  'x0y3', 'x1y3', 'x2y3', 'x3y3', 'x4y3', 'x5y3', 'x6y3', 'x7y3', 'x8y3',
-  'x0y4', 'x1y4', 'x2y4', 'x3y4', 'x4y4', 'x5y4', 'x6y4', 'x7y4', 'x8y4',
-  'x0y5', 'x1y5', 'x2y5', 'x3y5', 'x4y5', 'x5y5', 'x6y5', 'x7y5', 'x8y5',
-  'x0y6', 'x1y6', 'x2y6', 'x3y6', 'x4y6', 'x5y6', 'x6y6', 'x7y6', 'x8y6',
-  'x0y7', 'x1y7', 'x2y7', 'x3y7', 'x4y7', 'x5y7', 'x6y7', 'x7y7', 'x8y7',
-  'x0y8', 'x1y8', 'x2y8', 'x3y8', 'x4y8', 'x5y8', 'x6y8', 'x7y8', 'x8y8'
 ];
 
 const standardOverlay = [
@@ -57,6 +41,9 @@ const tileMap = [
   [6, 6, 60], [7, 6, 61], [8, 6, 62], [6, 7, 69], [7, 7, 70], [8, 7, 71], [6, 8, 78], [7, 8, 79], [8, 8, 80]
 ];
 
+const mode = 'normal';
+const target = 'last';
+
 export class Sudoku {
 	constructor(type = 'standard', solvedHandler, saved) {
 
@@ -78,18 +65,24 @@ export class Sudoku {
     }
     else if(type==='jigsaw') {
 
-      // const puzzle = saved ? saved : getRandom(puzzles);
-      const puzzle = puzzles[puzzles.length-1];
+			let puzzle = null;
+
+			if(target==='last') {
+				puzzle = puzzles[puzzles.length-1];
+			}
+			else {
+				puzzle = saved ? saved : getRandom(puzzles);
+			};
 
       this.overlay = puzzle[0];
       this.numbers = puzzle[1];
-      this.clues = puzzle[2];
+      this.clues = mode==='test' ? [] : puzzle[2];
       this.data = puzzle;
 
     };
 
     this.tiles = tileMap.map((data) => {
-      return new PuzzleTile(this, data[0], data[1], brown[data[2]], data[2]);
+      return new PuzzleTile(data[0], data[1], this.numbers[data[2]], this.clues[data[2]]);
     });
     this.type = type;
     this.solvedHandler = solvedHandler;
@@ -249,12 +242,11 @@ export class Sudoku {
 };
 
 class PuzzleTile {
-	constructor(puzzle, x, y, name, index) {
+	constructor(x, y, value = 0, clue = 1) {
 
-		this.puzzle = puzzle;
-		this.name = name;
-		this.value = this.puzzle.numbers[index];
-		this.clue = this.puzzle.clues[index];
+		this.name = `x${x}y${y}`;
+		this.value = value;
+		this.clue = clue;
 		this.display = this.clue ? this.value : 0;
 		this.x = x;
 		this.y = y;
@@ -271,8 +263,4 @@ class PuzzleTile {
 		return this;
 	};
 	highlight = false;
-	value = 0;
-	maxValue = 9;
-	hint = false;
-	logic = 0;
 };

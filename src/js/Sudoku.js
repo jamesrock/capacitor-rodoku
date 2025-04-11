@@ -1,16 +1,12 @@
 import { getSudoku } from 'sudoku-gen';
+import { puzzles } from './puzzles';
+import { inflate, makeEven } from './utils';
 
-const mapper = (puzzle, solution) => {
-  return (item) => {
-    return [`${solution[item]}`, puzzle[item]==='-' ? 0 : 1, brown[item], item];
-  };
-};
+const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
+const getRandom = (target) => target[getRandomIndex(target)];
 
-const indexes = [
-  [0, 1, 2, 3, 4, 5, 6, 7, 8],
-  [6, 3, 0, 7, 4, 1, 8, 5, 2],
-  [8, 7, 6, 5, 4, 3, 2, 1, 0],
-  [2, 5, 8, 1, 4, 7, 0, 3, 6]
+const colours = [
+	[199, 217, 140], [229, 205, 239], [192, 230, 250], [188, 223, 199], [212, 208, 241], [250, 216, 234], [247, 214, 193], [255, 251, 196], [197, 210, 244]
 ];
 
 const fake = [
@@ -37,22 +33,274 @@ const brown = [
   'x0y8', 'x1y8', 'x2y8', 'x3y8', 'x4y8', 'x5y8', 'x6y8', 'x7y8', 'x8y8'
 ];
 
+const standardOverlay = [
+  [[0, 0], [3, 0], [3, 3], [0, 3], [0, 0]],
+  [[3, 0], [6, 0], [6, 3], [3, 3], [3, 0]],
+  [[6, 0], [9, 0], [9, 3], [6, 3], [6, 0]],
+  [[0, 3], [3, 3], [3, 6], [0, 6], [0, 3]],
+  [[3, 3], [6, 3], [6, 6], [3, 6], [3, 3]],
+  [[6, 3], [9, 3], [9, 6], [6, 6], [6, 3]],
+  [[0, 6], [3, 6], [3, 9], [0, 9], [0, 6]],
+  [[3, 6], [6, 6], [6, 9], [3, 9], [3, 6]],
+  [[6, 6], [9, 6], [9, 9], [6, 9], [6, 6]]
+];
+
+const standardBoxes = [
+  [[0, 0, 0], [1, 0, 1], [2, 0, 2], [0, 1, 9], [1, 1, 10], [2, 1, 11], [0, 2, 18], [1, 2, 19], [2, 2, 20]],
+  [[3, 0, 3], [4, 0, 4], [5, 0, 5], [3, 1, 12], [4, 1, 13], [5, 1, 14], [3, 2, 21], [4, 2, 22], [5, 2, 23]],
+  [[6, 0, 6], [7, 0, 7], [8, 0, 8], [6, 1, 15], [7, 1, 16], [8, 1, 17], [6, 2, 24], [7, 2, 25], [8, 2, 26]],
+  [[0, 3, 27], [1, 3, 28], [2, 3, 29], [0, 4, 36], [1, 4, 37], [2, 4, 38], [0, 5, 45], [1, 5, 46], [2, 5, 47]],
+  [[3, 3, 30], [4, 3, 31], [5, 3, 32], [3, 4, 39], [4, 4, 40], [5, 4, 41], [3, 5, 48], [4, 5, 49], [5, 5, 50]],
+  [[6, 3, 33], [7, 3, 34], [8, 3, 35], [6, 4, 42], [7, 4, 43], [8, 4, 44], [6, 5, 51], [7, 5, 52], [8, 5, 53]],
+  [[0, 6, 54], [1, 6, 55], [2, 6, 56], [0, 7, 63], [1, 7, 64], [2, 7, 65], [0, 8, 72], [1, 8, 73], [2, 8, 74]],
+  [[3, 6, 57], [4, 6, 58], [5, 6, 59], [3, 7, 66], [4, 7, 67], [5, 7, 68], [3, 8, 75], [4, 8, 76], [5, 8, 77]],
+  [[6, 6, 60], [7, 6, 61], [8, 6, 62], [6, 7, 69], [7, 7, 70], [8, 7, 71], [6, 8, 78], [7, 8, 79], [8, 8, 80]]
+];
+
 export class Sudoku {
-  constructor() {
-    const sudoku = getSudoku('medium');
-    const puzzle = this.puzzle = sudoku.puzzle.split('');
-    const solution = this.solution = sudoku.solution.split('');
-    this.data = [
-      [0, 1, 2, 9, 10, 11, 18, 19, 20].map(mapper(puzzle, solution)),
-      [3, 4, 5, 12, 13, 14, 21, 22, 23].map(mapper(puzzle, solution)),
-      [6, 7, 8, 15, 16, 17, 24, 25, 26].map(mapper(puzzle, solution)),
-      [27, 28, 29, 36, 37, 38, 45, 46, 47].map(mapper(puzzle, solution)),
-      [30, 31, 32, 39, 40, 41, 48, 49, 50].map(mapper(puzzle, solution)),
-      [33, 34, 35, 42, 43, 44, 51, 52, 53].map(mapper(puzzle, solution)),
-      [54, 55, 56, 63, 64, 65, 72, 73, 74].map(mapper(puzzle, solution)),
-      [57, 58, 59, 66, 67, 68, 75, 76, 77].map(mapper(puzzle, solution)),
-      [60, 61, 62, 69, 70, 71, 78, 79, 80].map(mapper(puzzle, solution))
-    ];
+	constructor(type = 'standard', solvedHandler, saved) {
+
+    if(type==='standard') {
+      
+      const sudoku = saved ? saved : getSudoku('medium');
+      const puzzle = sudoku.puzzle.split('').map((item) => {
+        return item==='-' ? 0 : parseFloat(item);
+      });
+      const solution = sudoku.solution.split('').map((item) => {
+        return parseFloat(item);
+      });
+
+      this.numbers = solution;
+      this.clues = puzzle;
+      this.boxes = standardBoxes.map((box) => {
+        return box.map((data) => {
+          return [data[0], data[1], new PuzzleTile(this, brown[data[2]], data[2])];
+        });
+      });
+      this.overlay = standardOverlay;
+      this.data = sudoku;
+
+    }
+    else if(type==='jigsaw') {
+
+      const puzzle = saved ? saved : getRandom(puzzles);
+
+      this.numbers = puzzle[1];
+      this.clues = puzzle[2];
+      this.boxes = puzzle[0].map((box) => {
+        return box.map((data) => {
+          return [data[0], data[1], new PuzzleTile(this, brown[data[2]], data[2])];
+        });
+      });
+      this.overlay = puzzle[3];
+      this.data = puzzle;
+
+    };
+
+    this.tiles = this.boxes.flatMap((box) => {
+      return box.map((data) => {
+        return data[2];
+      });
+    });
+
+    this.type = type;
+    this.solvedHandler = solvedHandler;
+
     console.log(this);
-  };
+
+		this.highlight();
+
+	};
+	render(ctx, renderer) {
+    
+		const size = inflate(renderer.width/9);
+		const offset = renderer.offset;
+
+    // console.log(size);
+
+		ctx.fillStyle = 'grey';
+		ctx.fillRect(
+			0 + offset, 
+			0 + offset, 
+			(size * 9), 
+			(size * 9)
+		);
+
+		this.boxes.forEach((box, boxIndex) => {
+
+			box.forEach((tile) => {
+				
+				ctx.fillStyle = `rgb(255,255,255)`;
+				ctx.fillRect(
+					(tile[0] * size) + offset, 
+					(tile[1] * size) + offset, 
+					size, 
+					size
+				);
+
+        if(this.type==='jigsaw') {
+          ctx.fillStyle = tile[2].highlight ? `rgba(255,255,0,0.5)` : `rgba(${colours[boxIndex].join(',')},0.5)`;
+        }
+        else {
+          ctx.fillStyle = tile[2].highlight ? `rgb(255,255,0)` : `rgb(255,255,255)`;
+        };
+				
+				ctx.fillRect(
+					(tile[0] * size) + offset, 
+					(tile[1] * size) + offset, 
+					size, 
+					size
+				);
+
+				ctx.font = `900 ${size-10}px Poppins`;
+				ctx.textAlign = 'center';
+				ctx.fillStyle = tile[2].clue ? 'rgb(0,0,0)' : 'rgb(148,0,211)';
+				
+				ctx.fillText(
+					tile[2].display===0?'':tile[2].display, 
+					(tile[0] * size) + (size/2) + offset, 
+					(tile[1] * size) + (size - 17) + offset
+				);
+				
+			});
+
+		});
+
+		this.overlay.forEach((coords) => {
+			coords.forEach((bob, index) => {
+				ctx.lineWidth = 8;
+				ctx.lineCap = 'square';
+				ctx.strokeStyle = `rgb(212,212,212)`;
+				ctx.moveTo(
+					(bob[0]*size) + offset, 
+					(bob[1]*size) + offset
+				);
+				if(coords[index+1]) {
+					ctx.lineTo(
+						(coords[index+1][0]*size) + offset, 
+						(coords[index+1][1]*size) + offset
+					);
+				}
+				else {
+					ctx.stroke();
+				};
+			});
+		});
+
+		[1, 2, 3, 4, 5, 6, 7, 8].forEach((x) => {
+			ctx.lineWidth = 4;
+			ctx.lineCap = 'square';
+			ctx.moveTo(
+				(x*size) + offset,
+				offset
+			);
+			ctx.lineTo(
+				(x*size) + offset,
+				(9*size) + offset
+			);
+			ctx.stroke();
+		});
+
+		[1, 2, 3, 4, 5, 6, 7, 8].forEach((y) => {
+			ctx.lineWidth = 4;
+			ctx.lineCap = 'square';
+			ctx.moveTo(
+				offset,
+				(y*size) + offset
+			);
+			ctx.lineTo(
+				(9*size) + offset,
+				(y*size) + offset
+			);
+			ctx.stroke();
+		});
+
+	};
+	getValues() {
+
+		return this.data;
+
+	};
+	move(direction) {
+
+		console.log(`move(${direction})`);
+
+		switch(direction) {
+			case 'up':
+				if(this.activeY===0) {return};
+				this.activeY -= 1;
+			break;
+			case 'down':
+				if(this.activeY===8) {return};
+				this.activeY += 1;
+			break;
+			case 'left':
+				if(this.activeX===0) {return};
+				this.activeX -= 1;
+			break;
+			case 'right':
+				if(this.activeX===8) {return};
+				this.activeX += 1;
+			break;
+		};
+
+		this.highlight();
+
+	};
+	highlight() {
+		const active = this.getActive();
+		this.tiles.forEach((tile) => {
+			tile.highlight = false;
+		});
+		active.highlight = true;
+	};
+	fill() {
+		console.log(`fill()`);
+		const active = this.getActive();
+		active.increment();
+		this.checkForWin();
+	};
+	checkForWin() {
+		const correct = this.tiles.filter((tile) => {
+			return tile.display===tile.value;
+		}).length;
+		console.log('correct', correct);
+		if(correct===81) {
+			this.solvedHandler();
+		};
+	};
+	getActive() {
+		return this.tiles.filter((tile) => {
+			return tile.name === `x${this.activeX}y${this.activeY}`;
+		})[0];
+	};
+	activeX = 0;
+	activeY = 0;
+};
+
+class PuzzleTile {
+	constructor(puzzle, name, index) {
+
+		this.puzzle = puzzle;
+		this.name = name;
+		this.value = this.puzzle.numbers[index];
+		this.clue = this.puzzle.clues[index];
+		this.display = this.clue ? this.value : 0;
+
+	};
+	increment() {
+		if(this.clue) {return};
+		if(this.display===9) {
+			this.display = 0;
+		}
+		else {
+			this.display ++;
+		};
+		return this;
+	};
+	highlight = false;
+	value = 0;
+	maxValue = 9;
+	hint = false;
+	logic = 0;
 };

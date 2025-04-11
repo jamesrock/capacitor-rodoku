@@ -89,51 +89,13 @@ h2 {
   font-size: 40px;
 }
 
-.puzzle {
-  display: flex;
-  flex-wrap: wrap;
-  width: var(--puzzle-size);
+canvas {
   opacity: 0;
   transition: opacity 1s ease-out;
+
   &[data-state="show"] {
     opacity: 1;
   }
-}
-
-.block {
-  display: flex;
-  flex-wrap: wrap;
-  width: var(--block-size);
-  border: solid 1px var(--border);
-  transition: transform 300ms ease-out;
-  will-change: transform;
-  background-color: var(--puzzle-background);
-  cursor: pointer;
-}
-
-.square {
-  width: var(--square-size);
-  height: var(--square-size);
-  font-size: var(--square-font-size);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: solid 1px var(--border);
-  font-weight: 800;
-  line-height: 1.2;
-  -webkit-user-select: none;
-  user-select: none;
-  &.active {
-    background-color: var(--highlight-color);
-  }
-  &[data-locked="0"] {
-    color: var(--input-color);
-  }
-}
-
-.rotate {
-  transition: transform 300ms ease-out, opacity 500ms ease-out;
-  will-change: transform;
 }
 
 .solved {

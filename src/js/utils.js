@@ -8,3 +8,13 @@ const timeToSeconds = (time) => Math.floor((time % (1000 * 60)) / 1000);
 const pad = (time) => time.toString().padStart(2, '0');
 export const timeToDisplay = (time) => `${pad(timeToMinutes(time))}:${pad(timeToSeconds(time))}`;
 export const isValidKey = (key, options) => (options.includes(key));
+
+const pixelRatio = window.devicePixelRatio||1;
+export const inflate = (value) => {
+	return value*pixelRatio;
+};
+export const deflate = (value) => {
+	return value/pixelRatio;
+};
+
+export const makeEven = (value) => value % 2 === 1 ? value - 1 : value;

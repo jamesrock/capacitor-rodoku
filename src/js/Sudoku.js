@@ -41,7 +41,7 @@ const tileMap = [
   [6, 6, 60], [7, 6, 61], [8, 6, 62], [6, 7, 69], [7, 7, 70], [8, 7, 71], [6, 8, 78], [7, 8, 79], [8, 8, 80]
 ];
 
-const mode = 'normal';
+const mode = 'play';
 const target = 'last';
 
 export class Sudoku {
@@ -76,7 +76,7 @@ export class Sudoku {
 
       this.overlay = puzzle[0];
       this.numbers = puzzle[1];
-      this.clues = mode==='test' ? [] : puzzle[2];
+      this.clues = mode==='answers' ? [] : puzzle[2];
       this.data = puzzle;
 
     };

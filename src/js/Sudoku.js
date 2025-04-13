@@ -42,7 +42,7 @@ const tileMap = [
 ];
 
 const mode = 'play';
-const target = 'last';
+const target = 'random';
 
 export class Sudoku {
 	constructor(type = 'standard', solvedHandler, saved) {
@@ -69,6 +69,7 @@ export class Sudoku {
 
 			if(target==='last') {
 				puzzle = puzzles[puzzles.length-1];
+				// puzzle = puzzles[11];
 			}
 			else {
 				puzzle = saved ? saved : getRandom(puzzles);

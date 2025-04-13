@@ -3,6 +3,10 @@ import { Sudoku } from './Sudoku';
 import { Storage } from './Storage';
 import { Rounder } from './Rounder';
 import { Renderer } from './Renderer';
+import Swiper from 'swiper';
+import { Parallax } from 'swiper/modules';
+import 'swiper/scss';
+import 'swiper/css/parallax';
 
 const limit = (value, max) => value > max ? max : value;
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
@@ -18,15 +22,18 @@ const directionKeysMap = {
   'ArrowLeft': 'left',
   'ArrowRight': 'right'
 };
-const type = 'jigsaw';
 const savedGame = storage.get('saved');
 let best = storage.get('best') || 0;
+let standardPuzzle = null;
+let jigsawPuzzle = null;
 let puzzle = null;
 let start = 0;
 let touch = null;
 let xMovement = 0;
 let yMovement = 0;
 let gameOver = false;
+let standardRenderer = null;
+let jigsawRenderer = null;
 let renderer = null;
 
 const solvedHandler = () => {
@@ -49,32 +56,22 @@ const solvedHandler = () => {
   }, 250);
 };
 
-const saveGame = () => {
-
-  storage.set('saved', puzzle.getValues());
-  return this;
-
-};
-
 const startNewGame = () => {
 
   removeOld();
 
-  puzzle = new Sudoku(type, solvedHandler);
-  renderer = new Renderer(puzzleSize, puzzleSize, puzzle);
+  standardPuzzle = new Sudoku('standard', solvedHandler);
+  standardRenderer = new Renderer(puzzleSize, puzzleSize, standardPuzzle);
+
+  jigsawPuzzle = new Sudoku('jigsaw', solvedHandler);
+  jigsawRenderer = new Renderer(puzzleSize, puzzleSize, jigsawPuzzle);
+
+  puzzle = null;
   gameOver = false;
-  start = Date.now();
+  
   solvedNode.setAttribute('data-state', 'hidden');
 
-  setup();
-
-};
-
-const openSavedGame = () => {
-
-  const savedObject = storage.get('saved');
-  puzzle = new Sudoku(type, solvedHandler, savedObject);
-  renderer = new Renderer(puzzleSize, puzzleSize, puzzle);
+  swiper.enable();
 
   setup();
 
@@ -82,21 +79,75 @@ const openSavedGame = () => {
 
 const setup = () => {
 
-  renderer.appendTo(document.body);
-  renderer.render();
-  setTimeout(() => {
-    renderer.node.setAttribute('data-state', 'show');
-  }, 500);
+  standardRenderer.appendTo(standardSudoku);
+  jigsawRenderer.appendTo(jigsawSudoku);
+
+  standardRenderer.render();
+  jigsawRenderer.render();
 
 };
 
 const removeOld = () => {
   
-  if(renderer) {
-    renderer.node.parentNode.removeChild(renderer.node);
+  if(standardRenderer) {
+    standardRenderer.destroy();
+  };
+
+  if(jigsawRenderer) {
+    jigsawRenderer.destroy();
   };
 
 };
+
+const setPuzzle = (type) => {
+  
+  console.log(`setPuzzle(${type})`);
+  
+  switch(type) {
+    case 'jigsaw':
+      puzzle = jigsawPuzzle;
+      renderer = jigsawRenderer;
+      standardRenderer.stop();
+    break;
+    case 'standard':
+      puzzle = standardPuzzle;
+      renderer = standardRenderer;
+      jigsawRenderer.stop();
+    break;
+  };
+
+  renderer.render();
+
+  start = Date.now();
+  swiper.disable();
+
+};
+
+const swiper = new Swiper('.swiper', {
+  initialSlide: 1,
+  modules: [Parallax],
+  parallax: true
+});
+
+swiper.on('beforeTransitionStart', function(e) {
+  // console.log('slide changed', e.activeIndex);
+  if(e.activeIndex===0) {
+    setPuzzle('jigsaw');
+  };
+  if(e.activeIndex===2) {
+    setPuzzle('standard');
+  };
+});
+
+const standardSudoku = document.querySelector('#screen-standard');
+const welcome = document.querySelector('#screen-welcome');
+const jigsawSudoku = document.querySelector('#screen-jigsaw');
+
+welcome.innerHTML = `\
+<div class="welcome-body">\
+  <p class="swipe-left"><span>swipe left for</span> <strong>standard sudoku</strong></p>\
+  <p class="swipe-right"><span>swipe right for</span> <strong>jigsaw sudoku</strong></p>\
+</div>`;
 
 document.body.append(solvedNode);
 
@@ -104,6 +155,7 @@ startNewGame();
 
 solvedNode.addEventListener('click', () => {
   startNewGame();
+  swiper.slideTo(1);
 });
 
 document.addEventListener('touchstart', function(e) {
@@ -147,28 +199,34 @@ document.addEventListener('touchend', function() {
   const noMovement = (xMovement===0 && yMovement===0);
 
   if(noMovement) {
-    fill();
+    puzzle.fill();
   };
 
 });
 
 document.addEventListener('drag-down', () => {
+  if(!puzzle) {return};
   puzzle.move('down');
 });
 
 document.addEventListener('drag-up', () => {
+  if(!puzzle) {return};
   puzzle.move('up');
 });
 
 document.addEventListener('drag-right', () => {
+  if(!puzzle) {return};
   puzzle.move('right');
 });
 
 document.addEventListener('drag-left', () => {
+  if(!puzzle) {return};
   puzzle.move('left');
 });
 
 document.addEventListener('keydown', (e) => {
+  
+  if(!puzzle) {return};
 
   if(isValidKey(e.code, directionKeys)) {
     puzzle.move(directionKeysMap[e.code]);

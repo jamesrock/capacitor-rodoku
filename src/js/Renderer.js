@@ -48,6 +48,13 @@ export class Renderer {
     return this;
 
   };
+  destroy() {
+
+    this.stop();
+    this.node.parentNode.removeChild(this.node);
+    return this;
+
+  };
   type = '2d';
   frame = 0;
   paused = false;

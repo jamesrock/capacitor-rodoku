@@ -29,23 +29,11 @@ const tileMap = [
   [6, 6, 60], [7, 6, 61], [8, 6, 62], [6, 7, 69], [7, 7, 70], [8, 7, 71], [6, 8, 78], [7, 8, 79], [8, 8, 80]
 ];
 
-const viralClues = [
-	1, 0, 0, 0, 0, 0, 0, 0, 0,
-	1, 1, 0, 0, 0, 0, 0, 0, 0,
-	1, 1, 1, 0, 0, 0, 0, 0, 0,
-	1, 1, 1, 1, 0, 0, 0, 0, 0,
-	1, 1, 1, 1, 1, 0, 0, 0, 0,
-	1, 1, 1, 1, 1, 1, 0, 0, 0,
-	1, 1, 1, 1, 1, 1, 1, 0, 0,
-	1, 1, 1, 1, 1, 1, 1, 1, 0,
-	1, 1, 1, 1, 1, 1, 1, 1, 1
-];
-
 const mode = 'play'; // 'allbutone', 'answers', 'play'
 const target = 'random';
 
 export class Sudoku {
-	constructor(type = 'standard', solvedHandler, saved) {
+	constructor(type, difficulty, solvedHandler, saved) {
 
 		let sudoku = null;
 
@@ -54,13 +42,13 @@ export class Sudoku {
 			case 'viral':
 			case 'daily':
 				
-				sudoku = saved ? saved : getSudoku('medium');
+				sudoku = saved ? saved : getSudoku(difficulty);
 
 				this.overlay = standardOverlay;
 				this.numbers = sudoku.solution.split('').map((item) => {
 					return parseFloat(item);
 				});
-				this.clues = type==='viral' ? viralClues : sudoku.puzzle.split('').map((item) => {
+				this.clues = sudoku.puzzle.split('').map((item) => {
 					return item==='-' ? 0 : parseFloat(item);
 				});
 
@@ -96,6 +84,7 @@ export class Sudoku {
       return new PuzzleTile(data[0], data[1], this.numbers[data[2]], this.clues[data[2]]);
     });
     this.type = type;
+		this.difficulty = difficulty;
     this.solvedHandler = solvedHandler;
 
     // console.log(this);

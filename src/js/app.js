@@ -22,7 +22,8 @@ const directionKeysMap = {
   'ArrowRight': 'right'
 };
 const savedGame = storage.get('saved');
-let best = storage.get('best') || 0;
+const puzzleType = 'standard';
+let times = storage.get('times');
 let start = 0;
 let touch = null;
 let xMovement = 0;
@@ -32,40 +33,49 @@ let puzzle = null;
 let renderer = null;
 let renderers = null;
 
+if(!times) {
+  times = {
+    'easy': 0,
+    'medium': 0,
+    'hard': 0,
+    'expert': 0
+  };
+};
+
 const solvedHandler = () => {
-  gameOver = true;
-  puzzle = null;
   const now = Date.now();
   const time = (now - start);
-  if(best===0||time<best) {
-    best = time;
-    storage.set('best', best);
+  if(times[puzzle.difficulty]===0||time<times[puzzle.difficulty]) {
+    times[puzzle.difficulty] = time;
+    storage.set('times', times);
   };
   solvedNode.innerHTML = `<div class="game-over-body">\
     <h2>Solved!</h2>\
     <p class="time">Time: ${timeToDisplay(time)}</p>\
-    <p class="best">Best: ${timeToDisplay(best)}</p>\
+    <p class="best">Best: ${timeToDisplay(times[puzzle.difficulty])}</p>\
     <p class="retry">Tap to try again.</p>\
   </div>`;
   solvedNode.setAttribute('data-state', 'pre-show');
   setTimeout(() => {
     solvedNode.setAttribute('data-state', 'show');
   }, 250);
+  gameOver = true;
+  puzzle = null;
 };
 
 const startNewGame = () => {
 
-  console.log('startNewGame');
+  // console.log('startNewGame');
 
   solvedNode.setAttribute('data-state', 'hidden');
 
   removeOld();
 
   renderers = [
-    new Renderer(puzzleSize, puzzleSize, new Sudoku('standard', solvedHandler), '#screen-standard'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku('jigsaw', solvedHandler), '#screen-jigsaw'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku('daily', solvedHandler), '#screen-daily'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku('viral', solvedHandler), '#screen-viral')
+    new Renderer(puzzleSize, puzzleSize, new Sudoku(puzzleType, 'easy', solvedHandler), '#screen-easy'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku(puzzleType, 'medium', solvedHandler), '#screen-medium'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku(puzzleType, 'hard', solvedHandler), '#screen-hard'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku(puzzleType, 'expert', solvedHandler), '#screen-expert')
   ];
   
   gameOver = false;
@@ -91,18 +101,18 @@ const removeOld = () => {
 
 };
 
-const setPuzzle = (type) => {
+const setPuzzle = (difficulty) => {
   
-  console.log(`setPuzzle(${type})`);
+  console.log(`setPuzzle(${difficulty})`);
 
   renderers.filter((r) => {
-    return !(r.puzzle.type===type);
+    return !(r.puzzle.difficulty===difficulty);
   }).forEach((r) => {
     r.destroy();
   });
 
   const active = renderers.filter((r) => {
-    return r.puzzle.type===type;
+    return r.puzzle.difficulty===difficulty;
   })[0];
 
   renderer = active;
@@ -116,12 +126,21 @@ const setPuzzle = (type) => {
 
 };
 
+const initHandler = (swiper) => {
+  setTimeout(() => {
+    swiper.el.setAttribute('data-state', 'show');
+  }, 500);
+};
+
 const hswiper = new Swiper('.h-swiper', {
   initialSlide: 1,
   modules: [Parallax],
   parallax: true,
   nested: true,
-  wrapperClass: 'h-swiper-wrapper'
+  wrapperClass: 'h-swiper-wrapper',
+  on: {
+    init: initHandler
+  }
 });
 
 const vswiper = new Swiper('.v-swiper', {
@@ -129,44 +148,37 @@ const vswiper = new Swiper('.v-swiper', {
   initialSlide: 1,
   modules: [Parallax],
   parallax: true,
-  wrapperClass: 'v-swiper-wrapper'
+  wrapperClass: 'v-swiper-wrapper',
+  on: {
+    init: initHandler
+  }
 });
 
-hswiper.on('beforeTransitionStart', function(e) {
+hswiper.on('beforeTransitionStart', (e) => {
   console.log('h-slide changed', e.activeIndex);
   if(e.activeIndex===0) {
-    setPuzzle('jigsaw');
+    setPuzzle('hard');
   };
   if(gameOver && e.activeIndex===1) {
     startNewGame();
   };
   if(e.activeIndex===2) {
-    setPuzzle('standard');
+    setPuzzle('medium');
   };
 });
 
-vswiper.on('beforeTransitionStart', function(e) {
+vswiper.on('beforeTransitionStart', (e) => {
   console.log('v-slide changed', e.activeIndex);
   if(e.activeIndex===0) {
-    setPuzzle('viral');
+    setPuzzle('expert');
   };
   if(gameOver && e.activeIndex===1) {
     startNewGame();
   };
   if(e.activeIndex===2) {
-    setPuzzle('daily');
+    setPuzzle('easy');
   };
 });
-
-const welcome = document.querySelector('#screen-welcome');
-
-welcome.innerHTML = `\
-<div class="welcome-body">\
-  <p class="swipe-up"><span>swipe up for</span> <strong>daily challenge</strong></p>\
-  <p class="swipe-left"><span>swipe left for</span> <strong>standard sudoku</strong></p>\
-  <p class="swipe-right"><span>swipe right for</span> <strong>jigsaw sudoku</strong></p>\
-  <p class="swipe-down"><span>swipe down for</span> <strong>viral sudoku</strong></p>\
-</div>`;
 
 document.body.append(solvedNode);
 

@@ -133,7 +133,7 @@ const vswiper = new Swiper('.v-swiper', {
 });
 
 hswiper.on('beforeTransitionStart', function(e) {
-  // console.log('h-slide changed', e.activeIndex);
+  console.log('h-slide changed', e.activeIndex);
   if(e.activeIndex===0) {
     setPuzzle('jigsaw');
   };
@@ -146,7 +146,7 @@ hswiper.on('beforeTransitionStart', function(e) {
 });
 
 vswiper.on('beforeTransitionStart', function(e) {
-  // console.log('v-slide changed', e.activeIndex);
+  console.log('v-slide changed', e.activeIndex);
   if(e.activeIndex===0) {
     setPuzzle('viral');
   };
@@ -181,7 +181,7 @@ solvedNode.addEventListener('click', () => {
 
 document.addEventListener('touchstart', function(e) {
 
-  if(!puzzle) {return};
+  if(gameOver) {return};
     
   touch = e.touches[0];
   xMovement = 0;
@@ -193,7 +193,7 @@ document.addEventListener('touchstart', function(e) {
 
 document.addEventListener('touchmove', function(e) {
 
-  if(!puzzle) {return};
+  if(gameOver) {return};
   
   const {clientX: originalClientX, clientY: originalClientY} = touch;
   const {clientX, clientY} = e.touches[0];
@@ -216,6 +216,7 @@ document.addEventListener('touchmove', function(e) {
 document.addEventListener('touchend', function() {
 
   if(!puzzle) {return};
+  if(gameOver) {return};
 
   const noMovement = (xMovement===0 && yMovement===0);
 

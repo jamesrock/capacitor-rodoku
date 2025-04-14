@@ -5,18 +5,6 @@ import { inflate } from './utils';
 const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 const getRandom = (target) => target[getRandomIndex(target)];
 
-const fake = [
-  1, 2, 3, 1, 2, 3, 1, 2, 3,
-  4, 5, 6, 4, 5, 6, 4, 5, 6,
-  7, 8, 9, 7, 8, 9, 7, 8, 9,
-  1, 2, 3, 1, 2, 3, 1, 2, 3,
-  4, 5, 6, 4, 5, 6, 4, 5, 6,
-  7, 8, 9, 7, 8, 9, 7, 8, 9,
-  1, 2, 3, 1, 2, 3, 1, 2, 3,
-  4, 5, 6, 4, 5, 6, 4, 5, 6,
-  7, 8, 9, 7, 8, 9, 7, 8, 9
-];
-
 const standardOverlay = [
   [[0, 0], [3, 0], [3, 3], [0, 3], [0, 0]],
   [[3, 0], [6, 0], [6, 3], [3, 3], [3, 0]],
@@ -53,7 +41,7 @@ const viralClues = [
 	1, 1, 1, 1, 1, 1, 1, 1, 1
 ];
 
-const mode = 'play';
+const mode = 'play'; // 'allbutone', 'answers', 'play'
 const target = 'random';
 
 export class Sudoku {
@@ -89,8 +77,17 @@ export class Sudoku {
 
 				this.overlay = sudoku[0];
 				this.numbers = sudoku[1];
-				this.clues = mode==='answers' ? [] : sudoku[2];
+				this.clues = sudoku[2];
 
+			break;
+		};
+
+		switch(mode) {
+			case 'allbutone':
+				this.clues = [0];
+			break;
+			case 'answers':
+				this.clues = [];
 			break;
 		};
 
@@ -101,7 +98,7 @@ export class Sudoku {
     this.type = type;
     this.solvedHandler = solvedHandler;
 
-    console.log(this);
+    // console.log(this);
 
 		this.highlight();
 
@@ -201,7 +198,7 @@ export class Sudoku {
 	};
 	move(direction) {
 
-		console.log(this, `move(${direction})`);
+		console.log(`move(${direction})`);
 
 		switch(direction) {
 			case 'up':

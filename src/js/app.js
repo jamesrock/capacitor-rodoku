@@ -34,6 +34,7 @@ let renderers = null;
 
 const solvedHandler = () => {
   gameOver = true;
+  puzzle = null;
   const now = Date.now();
   const time = (now - start);
   if(best===0||time<best) {
@@ -54,6 +55,10 @@ const solvedHandler = () => {
 
 const startNewGame = () => {
 
+  console.log('startNewGame');
+
+  solvedNode.setAttribute('data-state', 'hidden');
+
   removeOld();
 
   renderers = [
@@ -62,17 +67,8 @@ const startNewGame = () => {
     new Renderer(puzzleSize, puzzleSize, new Sudoku('daily', solvedHandler), '#screen-daily'),
     new Renderer(puzzleSize, puzzleSize, new Sudoku('viral', solvedHandler), '#screen-viral')
   ];
-
-  puzzle = null;
-  renderer = null;
-  gameOver = false;
   
-  solvedNode.setAttribute('data-state', 'hidden');
-
-  vswiper.enable();
-  vswiper.slideTo(1);
-  hswiper.enable();
-  hswiper.slideTo(1);
+  gameOver = false;
 
   setup();
 
@@ -90,6 +86,7 @@ const removeOld = () => {
   
   if(renderer) {
     renderer.destroy();
+    renderer = null;
   };
 
 };
@@ -136,9 +133,12 @@ const vswiper = new Swiper('.v-swiper', {
 });
 
 hswiper.on('beforeTransitionStart', function(e) {
-  // console.log('slide changed', e.activeIndex);
+  // console.log('h-slide changed', e.activeIndex);
   if(e.activeIndex===0) {
     setPuzzle('jigsaw');
+  };
+  if(gameOver && e.activeIndex===1) {
+    startNewGame();
   };
   if(e.activeIndex===2) {
     setPuzzle('standard');
@@ -146,9 +146,12 @@ hswiper.on('beforeTransitionStart', function(e) {
 });
 
 vswiper.on('beforeTransitionStart', function(e) {
-  // console.log('slide changed', e.activeIndex);
+  // console.log('v-slide changed', e.activeIndex);
   if(e.activeIndex===0) {
     setPuzzle('viral');
+  };
+  if(gameOver && e.activeIndex===1) {
+    startNewGame();
   };
   if(e.activeIndex===2) {
     setPuzzle('daily');
@@ -170,12 +173,15 @@ document.body.append(solvedNode);
 startNewGame();
 
 solvedNode.addEventListener('click', () => {
-  startNewGame();
+  vswiper.enable();
+  vswiper.slideTo(1, 500);
+  hswiper.enable();
+  hswiper.slideTo(1, 500);
 });
 
 document.addEventListener('touchstart', function(e) {
 
-  if(gameOver) {return};
+  if(!puzzle) {return};
     
   touch = e.touches[0];
   xMovement = 0;
@@ -187,7 +193,7 @@ document.addEventListener('touchstart', function(e) {
 
 document.addEventListener('touchmove', function(e) {
 
-  if(gameOver) {return};
+  if(!puzzle) {return};
   
   const {clientX: originalClientX, clientY: originalClientY} = touch;
   const {clientX, clientY} = e.touches[0];
@@ -209,7 +215,7 @@ document.addEventListener('touchmove', function(e) {
 
 document.addEventListener('touchend', function() {
 
-  if(gameOver) {return};
+  if(!puzzle) {return};
 
   const noMovement = (xMovement===0 && yMovement===0);
 

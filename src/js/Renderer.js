@@ -3,7 +3,7 @@ import { inflate } from './utils';
 export class Renderer {
   constructor(width, height, puzzle, target) {
 
-    console.log('new Renderer()', this);
+    // console.log('new Renderer()', this);
 
     this.offset = 3;
     this.width = width;

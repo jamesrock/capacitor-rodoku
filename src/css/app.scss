@@ -133,6 +133,10 @@ h2 {
   }
 }
 
+.swiper-slide {
+  overflow: hidden;
+}
+
 .screen {
   width: 100vw;
   height: 100vh;
@@ -153,7 +157,8 @@ h2 {
 .swipe-up,
 .swipe-left,
 .swipe-right,
-.swipe-down {
+.swipe-down,
+.mode {
   span {
     display: block;
   }
@@ -174,4 +179,14 @@ h2 {
   padding: 20px;
   font-size: 22px;
   line-height: 1.2;
+}
+
+.mode {
+  text-align: center;
+  opacity: 0.6;
+  transform: scale(0.9);
+  padding-top: 50px;
+  strong {
+    font-size: 26px;
+  }
 }

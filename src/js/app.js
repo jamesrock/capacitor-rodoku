@@ -22,7 +22,7 @@ const directionKeysMap = {
   'ArrowRight': 'right'
 };
 const savedGame = storage.get('saved');
-const puzzleType = 'standard';
+const modeToggle = document.querySelector('#mode-toggle');
 let times = storage.get('times');
 let start = 0;
 let touch = null;
@@ -31,7 +31,8 @@ let yMovement = 0;
 let gameOver = false;
 let puzzle = null;
 let renderer = null;
-let renderers = null;
+let renderers = [];
+let mode = 'standard';
 
 if(!times) {
   times = {
@@ -71,10 +72,10 @@ const startNewGame = () => {
   removeOld();
 
   renderers = [
-    new Renderer(puzzleSize, puzzleSize, new Sudoku(puzzleType, 'easy', solvedHandler), '#screen-easy'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku(puzzleType, 'medium', solvedHandler), '#screen-medium'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku(puzzleType, 'hard', solvedHandler), '#screen-hard'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku(puzzleType, 'expert', solvedHandler), '#screen-expert')
+    new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'easy', solvedHandler), '#screen-easy'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'medium', solvedHandler), '#screen-medium'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'hard', solvedHandler), '#screen-hard'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'expert', solvedHandler), '#screen-expert')
   ];
   
   gameOver = false;
@@ -94,9 +95,12 @@ const setup = () => {
 const removeOld = () => {
   
   if(renderer) {
-    renderer.destroy();
     renderer = null;
   };
+
+  renderers.forEach((r) => {
+    r.destroy();
+  });
 
 };
 
@@ -107,7 +111,7 @@ const setPuzzle = (difficulty) => {
   renderers.filter((r) => {
     return !(r.puzzle.difficulty===difficulty);
   }).forEach((r) => {
-    r.destroy();
+    r.stop();
   });
 
   const active = renderers.filter((r) => {
@@ -189,6 +193,19 @@ solvedNode.addEventListener('click', () => {
   hswiper.enable();
   hswiper.slideTo(1, 500);
 });
+
+// document.addEventListener('click', () => {
+//   if(hswiper.activeIndex===1 && vswiper.activeIndex===1) {
+//     if(mode==='standard') {
+//       mode = 'jigsaw';
+//     }
+//     else {
+//       mode = 'standard';
+//     };
+//     modeToggle.innerHTML = `<span>tap to enable</span> <strong>${mode==='standard' ? 'jigsaw' : 'standard'} mode</strong>`;
+//     startNewGame();
+//   };
+// });
 
 document.addEventListener('touchstart', function(e) {
 

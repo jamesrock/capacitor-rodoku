@@ -5,7 +5,7 @@ export class Renderer {
 
     // console.log('new Renderer()', this);
 
-    this.offset = 3;
+    this.offset = inflate(3/2);
     this.width = width;
     this.height = height;
     this.puzzle = puzzle;

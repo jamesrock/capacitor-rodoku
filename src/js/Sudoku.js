@@ -120,19 +120,20 @@ export class Sudoku {
 
 			ctx.font = `900 ${size-10}px Poppins`;
 			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
 			ctx.fillStyle = tile.clue ? 'rgb(0,0,0)' : 'rgb(148,0,211)';
 			
 			ctx.fillText(
 				tile.display===0?'':tile.display, 
 				(tile.x * size) + (size/2) + offset, 
-				(tile.y * size) + (size-17) + offset
+				(tile.y * size) + ((size/2)+inflate(1)) + offset
 			);
 
 		});
 
 		this.overlay.forEach((coords) => {
 			coords.forEach((bob, index) => {
-				ctx.lineWidth = 8;
+				ctx.lineWidth = inflate(3);
 				ctx.lineCap = 'square';
 				ctx.strokeStyle = `rgb(0,0,0)`;
 				ctx.moveTo(
@@ -152,7 +153,7 @@ export class Sudoku {
 		});
 
 		[1, 2, 3, 4, 5, 6, 7, 8].forEach((x) => {
-			ctx.lineWidth = 2;
+			ctx.lineWidth = inflate(1);
 			ctx.lineCap = 'square';
 			ctx.moveTo(
 				(x*size) + offset,
@@ -166,7 +167,7 @@ export class Sudoku {
 		});
 
 		[1, 2, 3, 4, 5, 6, 7, 8].forEach((y) => {
-			ctx.lineWidth = 2;
+			ctx.lineWidth = inflate(1);
 			ctx.lineCap = 'square';
 			ctx.moveTo(
 				offset,

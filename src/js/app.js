@@ -43,8 +43,7 @@ if(!times) {
 };
 
 const solvedHandler = () => {
-  const now = Date.now();
-  const time = (now - start);
+  const time = (Date.now() - start);
   if(times[puzzle.difficulty]===0||time<times[puzzle.difficulty]) {
     times[puzzle.difficulty] = time;
     storage.set('times', times);

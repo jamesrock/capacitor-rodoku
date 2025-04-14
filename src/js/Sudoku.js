@@ -41,47 +41,60 @@ const tileMap = [
   [6, 6, 60], [7, 6, 61], [8, 6, 62], [6, 7, 69], [7, 7, 70], [8, 7, 71], [6, 8, 78], [7, 8, 79], [8, 8, 80]
 ];
 
+const viralClues = [
+	1, 0, 0, 0, 0, 0, 0, 0, 0,
+	1, 1, 0, 0, 0, 0, 0, 0, 0,
+	1, 1, 1, 0, 0, 0, 0, 0, 0,
+	1, 1, 1, 1, 0, 0, 0, 0, 0,
+	1, 1, 1, 1, 1, 0, 0, 0, 0,
+	1, 1, 1, 1, 1, 1, 0, 0, 0,
+	1, 1, 1, 1, 1, 1, 1, 0, 0,
+	1, 1, 1, 1, 1, 1, 1, 1, 0,
+	1, 1, 1, 1, 1, 1, 1, 1, 1
+];
+
 const mode = 'play';
 const target = 'random';
 
 export class Sudoku {
 	constructor(type = 'standard', solvedHandler, saved) {
 
-    if(type==='standard') {
-      
-      const sudoku = saved ? saved : getSudoku('medium');
-      const puzzle = sudoku.puzzle.split('').map((item) => {
-        return item==='-' ? 0 : parseFloat(item);
-      });
-      const solution = sudoku.solution.split('').map((item) => {
-        return parseFloat(item);
-      });
+		let sudoku = null;
 
-      this.numbers = solution;
-      this.clues = puzzle;
-      this.overlay = standardOverlay;
-      this.data = sudoku;
+		switch(type) {
+			case 'standard':
+			case 'viral':
+			case 'daily':
+				
+				sudoku = saved ? saved : getSudoku('medium');
 
-    }
-    else if(type==='jigsaw') {
+				this.overlay = standardOverlay;
+				this.numbers = sudoku.solution.split('').map((item) => {
+					return parseFloat(item);
+				});
+				this.clues = type==='viral' ? viralClues : sudoku.puzzle.split('').map((item) => {
+					return item==='-' ? 0 : parseFloat(item);
+				});
 
-			let puzzle = null;
+			break;
+			case 'jigsaw':
 
-			if(target==='last') {
-				puzzle = puzzles[puzzles.length-1];
-				// puzzle = puzzles[11];
-			}
-			else {
-				puzzle = saved ? saved : getRandom(puzzles);
-			};
+				if(target==='last') {
+					sudoku = puzzles[puzzles.length-1];
+					// puzzle = puzzles[11];
+				}
+				else {
+					sudoku = saved ? saved : getRandom(puzzles);
+				};
 
-      this.overlay = puzzle[0];
-      this.numbers = puzzle[1];
-      this.clues = mode==='answers' ? [] : puzzle[2];
-      this.data = puzzle;
+				this.overlay = sudoku[0];
+				this.numbers = sudoku[1];
+				this.clues = mode==='answers' ? [] : sudoku[2];
 
-    };
+			break;
+		};
 
+		this.data = sudoku;
     this.tiles = tileMap.map((data) => {
       return new PuzzleTile(data[0], data[1], this.numbers[data[2]], this.clues[data[2]]);
     });
@@ -188,7 +201,7 @@ export class Sudoku {
 	};
 	move(direction) {
 
-		console.log(`move(${direction})`);
+		console.log(this, `move(${direction})`);
 
 		switch(direction) {
 			case 'up':

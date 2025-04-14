@@ -1,7 +1,7 @@
 import { inflate } from './utils';
 
 export class Renderer {
-  constructor(width, height, puzzle) {
+  constructor(width, height, puzzle, target) {
 
     console.log('new Renderer()', this);
 
@@ -9,6 +9,7 @@ export class Renderer {
     this.width = width;
     this.height = height;
     this.puzzle = puzzle;
+    this.target = target;
 
     this.node = document.createElement('canvas');
     this.context = this.node.getContext(this.type);
@@ -33,6 +34,12 @@ export class Renderer {
   appendTo(target) {
 
     target.append(this.node);
+    return this;
+
+  };
+  appendToTarget() {
+    
+    document.querySelector(this.target).append(this.node);
     return this;
 
   };

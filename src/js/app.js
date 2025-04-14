@@ -6,7 +6,6 @@ import { Renderer } from './Renderer';
 import Swiper from 'swiper';
 import { Parallax } from 'swiper/modules';
 import 'swiper/scss';
-import 'swiper/css/parallax';
 
 const limit = (value, max) => value > max ? max : value;
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
@@ -24,17 +23,14 @@ const directionKeysMap = {
 };
 const savedGame = storage.get('saved');
 let best = storage.get('best') || 0;
-let standardPuzzle = null;
-let jigsawPuzzle = null;
-let puzzle = null;
 let start = 0;
 let touch = null;
 let xMovement = 0;
 let yMovement = 0;
 let gameOver = false;
-let standardRenderer = null;
-let jigsawRenderer = null;
+let puzzle = null;
 let renderer = null;
+let renderers = null;
 
 const solvedHandler = () => {
   gameOver = true;
@@ -60,18 +56,23 @@ const startNewGame = () => {
 
   removeOld();
 
-  standardPuzzle = new Sudoku('standard', solvedHandler);
-  standardRenderer = new Renderer(puzzleSize, puzzleSize, standardPuzzle);
-
-  jigsawPuzzle = new Sudoku('jigsaw', solvedHandler);
-  jigsawRenderer = new Renderer(puzzleSize, puzzleSize, jigsawPuzzle);
+  renderers = [
+    new Renderer(puzzleSize, puzzleSize, new Sudoku('standard', solvedHandler), '#screen-standard'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku('jigsaw', solvedHandler), '#screen-jigsaw'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku('daily', solvedHandler), '#screen-daily'),
+    new Renderer(puzzleSize, puzzleSize, new Sudoku('viral', solvedHandler), '#screen-viral')
+  ];
 
   puzzle = null;
+  renderer = null;
   gameOver = false;
   
   solvedNode.setAttribute('data-state', 'hidden');
 
-  swiper.enable();
+  vswiper.enable();
+  vswiper.slideTo(1);
+  hswiper.enable();
+  hswiper.slideTo(1);
 
   setup();
 
@@ -79,22 +80,16 @@ const startNewGame = () => {
 
 const setup = () => {
 
-  standardRenderer.appendTo(standardSudoku);
-  jigsawRenderer.appendTo(jigsawSudoku);
-
-  standardRenderer.render();
-  jigsawRenderer.render();
+  renderers.forEach((r) => {
+    r.appendToTarget().render();
+  });
 
 };
 
 const removeOld = () => {
   
-  if(standardRenderer) {
-    standardRenderer.destroy();
-  };
-
-  if(jigsawRenderer) {
-    jigsawRenderer.destroy();
+  if(renderer) {
+    renderer.destroy();
   };
 
 };
@@ -102,34 +97,45 @@ const removeOld = () => {
 const setPuzzle = (type) => {
   
   console.log(`setPuzzle(${type})`);
-  
-  switch(type) {
-    case 'jigsaw':
-      puzzle = jigsawPuzzle;
-      renderer = jigsawRenderer;
-      standardRenderer.stop();
-    break;
-    case 'standard':
-      puzzle = standardPuzzle;
-      renderer = standardRenderer;
-      jigsawRenderer.stop();
-    break;
-  };
 
-  renderer.render();
+  renderers.filter((r) => {
+    return !(r.puzzle.type===type);
+  }).forEach((r) => {
+    r.destroy();
+  });
+
+  const active = renderers.filter((r) => {
+    return r.puzzle.type===type;
+  })[0];
+
+  renderer = active;
+  puzzle = active.puzzle;
+
+  console.log('active', active);
 
   start = Date.now();
-  swiper.disable();
+  vswiper.disable();
+  hswiper.disable();
 
 };
 
-const swiper = new Swiper('.swiper', {
+const hswiper = new Swiper('.h-swiper', {
   initialSlide: 1,
   modules: [Parallax],
-  parallax: true
+  parallax: true,
+  nested: true,
+  wrapperClass: 'h-swiper-wrapper'
 });
 
-swiper.on('beforeTransitionStart', function(e) {
+const vswiper = new Swiper('.v-swiper', {
+  direction: 'vertical',
+  initialSlide: 1,
+  modules: [Parallax],
+  parallax: true,
+  wrapperClass: 'v-swiper-wrapper'
+});
+
+hswiper.on('beforeTransitionStart', function(e) {
   // console.log('slide changed', e.activeIndex);
   if(e.activeIndex===0) {
     setPuzzle('jigsaw');
@@ -139,14 +145,24 @@ swiper.on('beforeTransitionStart', function(e) {
   };
 });
 
-const standardSudoku = document.querySelector('#screen-standard');
+vswiper.on('beforeTransitionStart', function(e) {
+  // console.log('slide changed', e.activeIndex);
+  if(e.activeIndex===0) {
+    setPuzzle('viral');
+  };
+  if(e.activeIndex===2) {
+    setPuzzle('daily');
+  };
+});
+
 const welcome = document.querySelector('#screen-welcome');
-const jigsawSudoku = document.querySelector('#screen-jigsaw');
 
 welcome.innerHTML = `\
 <div class="welcome-body">\
+  <p class="swipe-up"><span>swipe up for</span> <strong>daily challenge</strong></p>\
   <p class="swipe-left"><span>swipe left for</span> <strong>standard sudoku</strong></p>\
   <p class="swipe-right"><span>swipe right for</span> <strong>jigsaw sudoku</strong></p>\
+  <p class="swipe-down"><span>swipe down for</span> <strong>viral sudoku</strong></p>\
 </div>`;
 
 document.body.append(solvedNode);
@@ -155,7 +171,6 @@ startNewGame();
 
 solvedNode.addEventListener('click', () => {
   startNewGame();
-  swiper.slideTo(1);
 });
 
 document.addEventListener('touchstart', function(e) {

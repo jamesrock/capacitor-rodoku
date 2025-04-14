@@ -120,14 +120,16 @@ h2 {
   padding-top: 20px;
 }
 
-.swiper {
+.swiper,
+.h-swiper,
+.v-swiper {
   width: 100%;
   height: 100%;
 }
 
 .screen {
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -142,8 +144,10 @@ h2 {
   text-align: right;
 }
 
+.swipe-up,
 .swipe-left,
-.swipe-right {
+.swipe-right,
+.swipe-down {
   span {
     display: block;
   }
@@ -152,9 +156,14 @@ h2 {
   }
 }
 
+.swipe-up,
+.swipe-down {
+  text-align: center;
+}
+
 .welcome-body {
   display: flex;
-  gap: 40px;
+  gap: 60px;
   flex-direction: column;
   padding: 20px;
   font-size: 22px;

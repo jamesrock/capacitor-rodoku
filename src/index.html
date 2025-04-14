@@ -14,19 +14,33 @@
 		<title>rodoku</title>
 	</head>
 	<body data-state="loaded">
-		<div class="swiper">
-			<div class="swiper-wrapper">
+
+		<div class="v-swiper">
+			<div class="v-swiper-wrapper swiper-wrapper">
 				<div class="swiper-slide">
-					<div id="screen-jigsaw" class="screen" data-swiper-parallax="-25%"></div>
+					<div id="screen-viral" class="screen" data-swiper-parallax="-25%"></div>
 				</div>
 				<div class="swiper-slide">
-					<div id="screen-welcome" class="screen"></div>
+					<div class="h-swiper">
+						<div class="h-swiper-wrapper swiper-wrapper">
+							<div class="swiper-slide">
+								<div id="screen-jigsaw" class="screen" data-swiper-parallax="-25%"></div>
+							</div>
+							<div class="swiper-slide">
+								<div id="screen-welcome" class="screen"></div>
+							</div>
+							<div class="swiper-slide">
+								<div id="screen-standard" class="screen" data-swiper-parallax="-25%"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="swiper-slide">
-					<div id="screen-standard" class="screen" data-swiper-parallax="-25%"></div>
+					<div id="screen-daily" class="screen" data-swiper-parallax="-25%"></div>
 				</div>
 			</div>
 		</div>
+		
 		<script src="./js/app.js" type="module"></script>
 	</body>
 </html>

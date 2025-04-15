@@ -32,6 +32,8 @@ const tileMap = [
 const mode = 'play'; // 'allbutone', 'answers', 'play'
 const target = 'random';
 
+console.log('puzzles', puzzles);
+
 export class Sudoku {
 	constructor(type, difficulty, solvedHandler, saved) {
 
@@ -39,8 +41,6 @@ export class Sudoku {
 
 		switch(type) {
 			case 'standard':
-			case 'viral':
-			case 'daily':
 				
 				sudoku = saved ? saved : getSudoku(difficulty);
 
@@ -56,11 +56,11 @@ export class Sudoku {
 			case 'jigsaw':
 
 				if(target==='last') {
-					sudoku = puzzles[puzzles.length-1];
+					sudoku = puzzles[difficulty][puzzles.length-1];
 					// puzzle = puzzles[11];
 				}
 				else {
-					sudoku = saved ? saved : getRandom(puzzles);
+					sudoku = saved ? saved : getRandom(puzzles[difficulty]);
 				};
 
 				this.overlay = sudoku[0];

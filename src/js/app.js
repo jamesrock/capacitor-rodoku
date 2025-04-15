@@ -28,7 +28,7 @@ let start = 0;
 let touch = null;
 let xMovement = 0;
 let yMovement = 0;
-let gameOver = false;
+let gameOver = true;
 let puzzle = null;
 let renderer = null;
 let renderers = [];
@@ -63,9 +63,10 @@ const solvedHandler = () => {
   puzzle = null;
 };
 
-const startNewGame = () => {
-
-  // console.log('startNewGame');
+const startNewGame = (force = false) => {
+  
+  if(!force&&!gameOver) {return};
+  console.log('startNewGame');
 
   solvedNode.setAttribute('data-state', 'hidden');
 
@@ -130,7 +131,7 @@ const toggleMode = () => {
   if(hswiper.activeIndex===1 && vswiper.activeIndex===1) {
     mode = mode==='standard' ? 'jigsaw' : 'standard';
     modeToggle.innerHTML = `${mode==='standard' ? 'jigsaw' : 'standard'} mode`;
-    startNewGame();
+    startNewGame(true);
   };
 };
 
@@ -167,7 +168,7 @@ hswiper.on('beforeTransitionStart', (e) => {
   if(e.activeIndex===0) {
     setPuzzle('hard');
   };
-  if(gameOver && e.activeIndex===1) {
+  if(e.activeIndex===1) {
     startNewGame();
   };
   if(e.activeIndex===2) {
@@ -180,7 +181,7 @@ vswiper.on('beforeTransitionStart', (e) => {
   if(e.activeIndex===0) {
     setPuzzle('expert');
   };
-  if(gameOver && e.activeIndex===1) {
+  if(e.activeIndex===1) {
     startNewGame();
   };
   if(e.activeIndex===2) {
@@ -189,8 +190,6 @@ vswiper.on('beforeTransitionStart', (e) => {
 });
 
 document.body.append(solvedNode);
-
-// startNewGame();
 
 solvedNode.addEventListener('click', () => {
   vswiper.enable();

@@ -30,7 +30,7 @@ const tileMap = [
 ];
 
 const mode = 'play'; // 'allbutone', 'answers', 'play'
-const target = 'random';
+const target = 'last'; // 'last', 'random'
 
 console.log('puzzles', puzzles);
 
@@ -56,8 +56,7 @@ export class Sudoku {
 			case 'jigsaw':
 
 				if(target==='last') {
-					sudoku = puzzles[difficulty][puzzles.length-1];
-					// puzzle = puzzles[11];
+					sudoku = puzzles[difficulty][puzzles[difficulty].length-1];
 				}
 				else {
 					sudoku = saved ? saved : getRandom(puzzles[difficulty]);

@@ -49,12 +49,6 @@ export class Renderer {
     return this;
 
   };
-  pause() {
-
-    this.paused = !this.paused;
-    return this;
-
-  };
   destroy() {
 
     this.stop();
@@ -64,5 +58,4 @@ export class Renderer {
   };
   type = '2d';
   frame = 0;
-  paused = false;
 };

@@ -87,7 +87,9 @@ const startNewGame = () => {
 const setup = () => {
 
   renderers.forEach((r) => {
-    r.appendToTarget().render();
+    r.appendToTarget();
+    r.render();
+    r.stop();
   });
 
 };
@@ -108,15 +110,9 @@ const setPuzzle = (difficulty) => {
   
   console.log(`setPuzzle(${difficulty})`);
 
-  renderers.filter((r) => {
-    return !(r.puzzle.difficulty===difficulty);
-  }).forEach((r) => {
-    r.stop();
-  });
-
   const active = renderers.filter((r) => {
     return r.puzzle.difficulty===difficulty;
-  })[0];
+  })[0].render();
 
   renderer = active;
   puzzle = active.puzzle;
@@ -127,6 +123,15 @@ const setPuzzle = (difficulty) => {
   vswiper.disable();
   hswiper.disable();
 
+};
+
+const toggleMode = () => {
+  console.log('toggleMode');
+  if(hswiper.activeIndex===1 && vswiper.activeIndex===1) {
+    mode = mode==='standard' ? 'jigsaw' : 'standard';
+    modeToggle.innerHTML = `${mode==='standard' ? 'jigsaw' : 'standard'} mode`;
+    startNewGame();
+  };
 };
 
 const initHandler = (swiper) => {
@@ -185,7 +190,7 @@ vswiper.on('beforeTransitionStart', (e) => {
 
 document.body.append(solvedNode);
 
-startNewGame();
+// startNewGame();
 
 solvedNode.addEventListener('click', () => {
   vswiper.enable();
@@ -194,22 +199,10 @@ solvedNode.addEventListener('click', () => {
   hswiper.slideTo(1, 500);
 });
 
-// document.addEventListener('click', () => {
-//   if(hswiper.activeIndex===1 && vswiper.activeIndex===1) {
-//     if(mode==='standard') {
-//       mode = 'jigsaw';
-//     }
-//     else {
-//       mode = 'standard';
-//     };
-//     modeToggle.innerHTML = `<span>tap to enable</span> <strong>${mode==='standard' ? 'jigsaw' : 'standard'} mode</strong>`;
-//     startNewGame();
-//   };
-// });
-
 document.addEventListener('touchstart', function(e) {
 
-  if(gameOver) {return};
+  // if(gameOver) {return};
+  // if(!puzzle) {return};
     
   touch = e.touches[0];
   xMovement = 0;
@@ -221,7 +214,8 @@ document.addEventListener('touchstart', function(e) {
 
 document.addEventListener('touchmove', function(e) {
 
-  if(gameOver) {return};
+  // if(gameOver) {return};
+  // if(!puzzle) {return};
   
   const {clientX: originalClientX, clientY: originalClientY} = touch;
   const {clientX, clientY} = e.touches[0];
@@ -243,13 +237,11 @@ document.addEventListener('touchmove', function(e) {
 
 document.addEventListener('touchend', function() {
 
-  if(!puzzle) {return};
-  if(gameOver) {return};
+  // if(!puzzle) {return};
+  // if(gameOver) {return};
 
-  const noMovement = (xMovement===0 && yMovement===0);
-
-  if(noMovement) {
-    puzzle.fill();
+  if(xMovement===0 && yMovement===0) {
+    puzzle ? puzzle.fill() : toggleMode();
   };
 
 });
@@ -276,14 +268,29 @@ document.addEventListener('drag-left', () => {
 
 document.addEventListener('keydown', (e) => {
   
-  if(!puzzle) {return};
+  // if(!puzzle) {return};
 
-  if(isValidKey(e.code, directionKeys)) {
+  if(puzzle && isValidKey(e.code, directionKeys)) {
     puzzle.move(directionKeysMap[e.code]);
   };
 
   if(isValidKey(e.code, rotateKeys)) {
-    puzzle.fill();
+    puzzle ? puzzle.fill() : toggleMode();
   };
 
 });
+
+async function loadFont(fontFamily = '', url = '', props = {}) {
+  const font = new FontFace(`${fontFamily}`, `url(${url})`, props);
+  await font.load();
+  document.fonts.add(font);
+};
+
+(async() => {
+  await loadFont('Poppins', '/fonts/Poppins-ExtraBold.ttf', {
+    style: 'normal',
+    weight: '800'
+  });
+  document.body.setAttribute('data-state', 'loaded');
+  startNewGame();
+})();

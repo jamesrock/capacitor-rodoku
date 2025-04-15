@@ -2,21 +2,21 @@
   font-family: 'Poppins';
   font-weight: 500;
   font-style: normal;
-  src: url('../assets/fonts/Poppins-Medium.ttf');
+  src: url('/fonts/Poppins-Medium.ttf');
 }
 
 @font-face {
   font-family: 'Poppins';
   font-weight: 800;
   font-style: normal;
-  src: url('../assets/fonts/Poppins-ExtraBold.ttf');
+  src: url('/fonts/Poppins-ExtraBold.ttf');
 }
 
 @font-face {
   font-family: 'Poppins';
   font-weight: 900;
   font-style: italic;
-  src: url('../assets/fonts/Poppins-BlackItalic.ttf');
+  src: url('/fonts/Poppins-BlackItalic.ttf');
 }
 
 :root {
@@ -185,7 +185,8 @@ h2 {
   text-align: center;
   opacity: 0.6;
   transform: scale(0.9);
-  padding-top: 50px;
+  // padding-top: 50px;
+  margin-bottom: -50px;
   strong {
     font-size: 26px;
   }

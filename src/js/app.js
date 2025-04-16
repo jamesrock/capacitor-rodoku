@@ -199,10 +199,7 @@ solvedNode.addEventListener('click', () => {
 });
 
 document.addEventListener('touchstart', function(e) {
-
-  // if(gameOver) {return};
-  // if(!puzzle) {return};
-    
+  
   touch = e.touches[0];
   xMovement = 0;
   yMovement = 0;
@@ -212,9 +209,6 @@ document.addEventListener('touchstart', function(e) {
 }, {passive: false});
 
 document.addEventListener('touchmove', function(e) {
-
-  // if(gameOver) {return};
-  // if(!puzzle) {return};
   
   const {clientX: originalClientX, clientY: originalClientY} = touch;
   const {clientX, clientY} = e.touches[0];
@@ -235,9 +229,6 @@ document.addEventListener('touchmove', function(e) {
 });
 
 document.addEventListener('touchend', function() {
-
-  // if(!puzzle) {return};
-  // if(gameOver) {return};
 
   if(xMovement===0 && yMovement===0) {
     puzzle ? puzzle.fill() : toggleMode();
@@ -266,8 +257,6 @@ document.addEventListener('drag-left', () => {
 });
 
 document.addEventListener('keydown', (e) => {
-  
-  // if(!puzzle) {return};
 
   if(puzzle && isValidKey(e.code, directionKeys)) {
     puzzle.move(directionKeysMap[e.code]);

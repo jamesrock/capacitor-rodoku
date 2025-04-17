@@ -52,8 +52,8 @@ if(!times) {
 
 if(!dailies) {
   dailies = {
-    'standard': [],
-    'jigsaw': []
+    'standard': {},
+    'jigsaw': {}
   };
 };
 

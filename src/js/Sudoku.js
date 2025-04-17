@@ -1,9 +1,6 @@
 import { getSudoku } from 'sudoku-gen';
 import { puzzles } from './puzzles';
-import { inflate } from './utils';
-
-const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
-const getRandom = (target) => target[getRandomIndex(target)];
+import { inflate, getRandom } from './utils';
 
 const standardOverlay = [
   [[0, 0], [3, 0], [3, 3], [0, 3], [0, 0]],
@@ -51,12 +48,13 @@ export class Sudoku {
 				this.clues = sudoku.puzzle.split('').map((item) => {
 					return item==='-' ? 0 : parseFloat(item);
 				});
+				this.difficulty = sudoku.difficulty;
 
 			break;
 			case 'jigsaw':
 
 				if(target==='last') {
-					sudoku = puzzles[difficulty][puzzles[difficulty].length-1];
+					sudoku = saved ? saved : puzzles[difficulty][puzzles[difficulty].length-1];
 				}
 				else {
 					sudoku = saved ? saved : getRandom(puzzles[difficulty]);
@@ -65,6 +63,7 @@ export class Sudoku {
 				this.overlay = sudoku[0];
 				this.numbers = sudoku[1];
 				this.clues = sudoku[2];
+				this.difficulty = sudoku[3];
 
 			break;
 		};
@@ -83,7 +82,7 @@ export class Sudoku {
       return new PuzzleTile(data[0], data[1], this.numbers[data[2]], this.clues[data[2]]);
     });
     this.type = type;
-		this.difficulty = difficulty;
+		
     this.solvedHandler = solvedHandler;
 
     // console.log(this);
@@ -181,9 +180,7 @@ export class Sudoku {
 
 	};
 	getValues() {
-
 		return this.data;
-
 	};
 	move(direction) {
 
@@ -236,6 +233,9 @@ export class Sudoku {
 		return this.tiles.filter((tile) => {
 			return tile.name === `x${this.activeX}y${this.activeY}`;
 		})[0];
+	};
+	getSaveObject() {
+		return this.data;
 	};
 	activeX = 0;
 	activeY = 0;

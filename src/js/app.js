@@ -1,6 +1,6 @@
-import { createNode, isValidKey, timeToDisplay, makeEven } from './utils';
+import { createNode, isValidKey, timeToDisplay, makeEven, getDateString, storage, getRandom } from './utils';
 import { Sudoku } from './Sudoku';
-import { Storage } from './Storage';
+// import { Storage } from './Storage';
 import { Rounder } from './Rounder';
 import { Renderer } from './Renderer';
 import Swiper from 'swiper';
@@ -11,7 +11,7 @@ const limit = (value, max) => value > max ? max : value;
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const puzzleSize = sqareSize*9;
 const solvedNode = createNode('div', 'solved');
-const storage = new Storage('me.jamesrock.rodoku');
+// const storage = new Storage('me.jamesrock.rodoku');
 const rounder = new Rounder(40);
 const rotateKeys = ['Space'];
 const directionKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
@@ -23,7 +23,16 @@ const directionKeysMap = {
 };
 const savedGame = storage.get('saved');
 const modeToggle = document.querySelector('#mode-toggle');
+const difficulties = ['easy', 'easy', 'easy', 'medium', 'medium', 'medium', 'hard'];
+const difficultyMap = {
+  'easy': 0,
+  'medium': 1,
+  'hard': 2,
+  'daily': 3
+};
+const date = getDateString();
 let times = storage.get('times');
+let dailies = storage.get('dailies');
 let start = 0;
 let touch = null;
 let xMovement = 0;
@@ -41,6 +50,25 @@ if(!times) {
     'hard': 0,
     'expert': 0
   };
+};
+
+if(!dailies) {
+  dailies = {
+    'standard': [],
+    'jigsaw': []
+  };
+};
+
+const getDailyPuzzle = () => {
+
+  if(dailies && dailies[mode][date]) {
+    console.log('has saved daily!', dailies[mode][date]);
+    return new Sudoku(mode, null, solvedHandler, dailies[mode][date]);
+  }
+  else {
+    return new Sudoku(mode, getRandom(difficulties), solvedHandler);
+  };
+  
 };
 
 const solvedHandler = () => {
@@ -76,7 +104,7 @@ const startNewGame = (force = false) => {
     new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'easy', solvedHandler), '#screen-easy'),
     new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'medium', solvedHandler), '#screen-medium'),
     new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'hard', solvedHandler), '#screen-hard'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'expert', solvedHandler), '#screen-expert')
+    new Renderer(puzzleSize, puzzleSize, getDailyPuzzle(), '#screen-daily')
   ];
   
   gameOver = false;
@@ -110,10 +138,8 @@ const removeOld = () => {
 const setPuzzle = (difficulty) => {
   
   console.log(`setPuzzle(${difficulty})`);
-
-  const active = renderers.filter((r) => {
-    return r.puzzle.difficulty===difficulty;
-  })[0].render();
+  
+  const active = renderers[difficultyMap[difficulty]].render();
 
   renderer = active;
   puzzle = active.puzzle;
@@ -123,6 +149,13 @@ const setPuzzle = (difficulty) => {
   start = Date.now();
   vswiper.disable();
   hswiper.disable();
+
+  if(difficulty==='daily') {
+    storage.set('dailies', {
+      ...dailies,
+      [mode]: {...dailies[mode], [getDateString()]: puzzle.getSaveObject()}
+    });
+  };
 
 };
 
@@ -179,7 +212,7 @@ hswiper.on('beforeTransitionStart', (e) => {
 vswiper.on('beforeTransitionStart', (e) => {
   console.log('v-slide changed', e.activeIndex);
   if(e.activeIndex===0) {
-    setPuzzle('expert');
+    setPuzzle('daily');
   };
   if(e.activeIndex===1) {
     startNewGame();
@@ -199,7 +232,7 @@ solvedNode.addEventListener('click', () => {
 });
 
 document.addEventListener('touchstart', function(e) {
-  
+
   touch = e.touches[0];
   xMovement = 0;
   yMovement = 0;
@@ -282,3 +315,5 @@ async function loadFont(fontFamily = '', url = '', props = {}) {
   document.body.setAttribute('data-state', 'loaded');
   startNewGame();
 })();
+
+console.log(getDateString());

@@ -1,6 +1,5 @@
 import { createNode, isValidKey, timeToDisplay, makeEven, getDateString, storage, getRandom } from './utils';
 import { Sudoku } from './Sudoku';
-// import { Storage } from './Storage';
 import { Rounder } from './Rounder';
 import { Renderer } from './Renderer';
 import Swiper from 'swiper';
@@ -11,7 +10,6 @@ const limit = (value, max) => value > max ? max : value;
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const puzzleSize = sqareSize*9;
 const solvedNode = createNode('div', 'solved');
-// const storage = new Storage('me.jamesrock.rodoku');
 const rounder = new Rounder(40);
 const rotateKeys = ['Space'];
 const directionKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
@@ -23,7 +21,7 @@ const directionKeysMap = {
 };
 const savedGame = storage.get('saved');
 const modeToggle = document.querySelector('#mode-toggle');
-const difficulties = ['easy', 'easy', 'easy', 'medium', 'medium', 'medium', 'hard'];
+const difficulties = ['easy', 'easy', 'medium', 'medium', 'medium', 'hard', 'hard'];
 const difficultyMap = {
   'easy': 0,
   'medium': 1,
@@ -153,7 +151,7 @@ const setPuzzle = (difficulty) => {
   if(difficulty==='daily') {
     storage.set('dailies', {
       ...dailies,
-      [mode]: {...dailies[mode], [getDateString()]: puzzle.getSaveObject()}
+      [mode]: {...dailies[mode], [date]: puzzle.getSaveObject()}
     });
   };
 
@@ -315,5 +313,3 @@ async function loadFont(fontFamily = '', url = '', props = {}) {
   document.body.setAttribute('data-state', 'loaded');
   startNewGame();
 })();
-
-console.log(getDateString());

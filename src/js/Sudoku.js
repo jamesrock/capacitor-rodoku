@@ -27,7 +27,7 @@ const tileMap = [
 ];
 
 const mode = 'play'; // 'allbutone', 'answers', 'play'
-const target = 'last'; // 'last', 'random'
+const target = 'random'; // 'last', 'random'
 
 console.log('puzzles', puzzles);
 

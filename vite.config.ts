@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import terser from '@rollup/plugin-terser';
 
 export default defineConfig({
   root: './src',
@@ -12,6 +13,7 @@ export default defineConfig({
         about: './src/about.html',
         privacy: './src/privacy.html',
       },
+      plugins: [terser()]
     },
   },
   css: {

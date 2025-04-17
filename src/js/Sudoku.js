@@ -1,6 +1,6 @@
 import { getSudoku } from 'sudoku-gen';
 import { puzzles } from './puzzles';
-import { inflate, getRandom } from './utils';
+import { inflate, getRandom, isDarkMode } from './utils';
 
 const standardOverlay = [
   [[0, 0], [3, 0], [3, 3], [0, 3], [0, 0]],
@@ -25,6 +25,25 @@ const tileMap = [
   [3, 6, 57], [4, 6, 58], [5, 6, 59], [3, 7, 66], [4, 7, 67], [5, 7, 68], [3, 8, 75], [4, 8, 76], [5, 8, 77],
   [6, 6, 60], [7, 6, 61], [8, 6, 62], [6, 7, 69], [7, 7, 70], [8, 7, 71], [6, 8, 78], [7, 8, 79], [8, 8, 80]
 ];
+
+const colors = {
+	'dark': {
+		'background': 'black',
+		'foreground': 'snow',
+		'stroke': 'snow',
+		'highlight': 'rgb(69,69,21)',
+		'input': 'rgb(232,163,60)'
+	},
+	'light': {
+		'background': 'white',
+		'foreground': 'black',
+		'stroke': 'black',
+		'highlight': 'rgb(255,255,0)',
+		'input': 'rgb(148,0,211)'
+	}
+};
+
+const getColor = (key) => colors[isDarkMode() ? 'dark' : 'light'][key];
 
 const mode = 'play'; // 'allbutone', 'answers', 'play'
 const target = 'random'; // 'last', 'random'
@@ -107,7 +126,7 @@ export class Sudoku {
 
 		this.tiles.forEach((tile) => {
 
-			ctx.fillStyle = tile.highlight ? `rgb(255,255,0)` : `rgb(255,255,255)`;
+			ctx.fillStyle = tile.highlight ? getColor('highlight') : getColor('background');
 			
 			ctx.fillRect(
 				(tile.x * size) + offset, 
@@ -119,7 +138,7 @@ export class Sudoku {
 			ctx.font = `900 ${size-10}px Poppins`;
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'middle';
-			ctx.fillStyle = tile.clue ? 'rgb(0,0,0)' : 'rgb(148,0,211)';
+			ctx.fillStyle = tile.clue ? getColor('foreground') : getColor('input');
 			
 			ctx.fillText(
 				tile.display===0?'':tile.display, 
@@ -133,7 +152,7 @@ export class Sudoku {
 			coords.forEach((bob, index) => {
 				ctx.lineWidth = inflate(3);
 				ctx.lineCap = 'square';
-				ctx.strokeStyle = `rgb(0,0,0)`;
+				ctx.strokeStyle = getColor('stroke');
 				ctx.moveTo(
 					(bob[0]*size) + offset, 
 					(bob[1]*size) + offset

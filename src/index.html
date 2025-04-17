@@ -14,6 +14,41 @@
 		<title>rodoku</title>
 	</head>
 	<body>
+
+		<div class="v-swiper">
+			<div class="v-swiper-wrapper swiper-wrapper">
+				<div class="swiper-slide">
+					<div id="screen-daily" class="screen" data-swiper-parallax="25%"></div>
+				</div>
+				<div class="swiper-slide">
+					<div class="h-swiper">
+						<div class="h-swiper-wrapper swiper-wrapper">
+							<div class="swiper-slide">
+								<div id="screen-hard" class="screen" data-swiper-parallax="-25%"></div>
+							</div>
+							<div class="swiper-slide">
+								<div id="screen-welcome" class="screen" data-swiper-parallax-opacity="0">
+									<div class="welcome-body">
+										<p class="swipe-up"><span>swipe up for</span> <strong>easy sudoku</strong></p>
+										<p class="swipe-left"><span>swipe left for</span> <strong>regular sudoku</strong></p>
+										<p class="swipe-right"><span>swipe right for</span> <strong>hard sudoku</strong></p>
+										<p class="swipe-down"><span>swipe down for</span> <strong>daily challenge</strong></p>
+										<p class="mode"><span>tap to enable</span> <strong id="mode-toggle">jigsaw mode</strong></p>
+									</div>
+								</div>
+							</div>
+							<div class="swiper-slide">
+								<div id="screen-medium" class="screen" data-swiper-parallax="-25%"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div id="screen-easy" class="screen" data-swiper-parallax="25%"></div>
+				</div>
+			</div>
+		</div>
+		
 		<script src="./js/app.js" type="module"></script>
 	</body>
 </html>

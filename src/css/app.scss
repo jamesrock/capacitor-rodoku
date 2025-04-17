@@ -2,21 +2,21 @@
   font-family: 'Poppins';
   font-weight: 500;
   font-style: normal;
-  src: url('../assets/fonts/Poppins-Medium.ttf');
+  src: url('/fonts/Poppins-Medium.ttf');
 }
 
 @font-face {
   font-family: 'Poppins';
   font-weight: 800;
   font-style: normal;
-  src: url('../assets/fonts/Poppins-ExtraBold.ttf');
+  src: url('/fonts/Poppins-ExtraBold.ttf');
 }
 
 @font-face {
   font-family: 'Poppins';
   font-weight: 900;
   font-style: italic;
-  src: url('../assets/fonts/Poppins-BlackItalic.ttf');
+  src: url('/fonts/Poppins-BlackItalic.ttf');
 }
 
 :root {
@@ -89,53 +89,6 @@ h2 {
   font-size: 40px;
 }
 
-.puzzle {
-  display: flex;
-  flex-wrap: wrap;
-  width: var(--puzzle-size);
-  opacity: 0;
-  transition: opacity 1s ease-out;
-  &[data-state="show"] {
-    opacity: 1;
-  }
-}
-
-.block {
-  display: flex;
-  flex-wrap: wrap;
-  width: var(--block-size);
-  border: solid 1px var(--border);
-  transition: transform 300ms ease-out;
-  will-change: transform;
-  background-color: var(--puzzle-background);
-  cursor: pointer;
-}
-
-.square {
-  width: var(--square-size);
-  height: var(--square-size);
-  font-size: var(--square-font-size);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: solid 1px var(--border);
-  font-weight: 800;
-  line-height: 1.2;
-  -webkit-user-select: none;
-  user-select: none;
-  &.active {
-    background-color: var(--highlight-color);
-  }
-  &[data-locked="0"] {
-    color: var(--input-color);
-  }
-}
-
-.rotate {
-  transition: transform 300ms ease-out, opacity 500ms ease-out;
-  will-change: transform;
-}
-
 .solved {
   background-color: var(--glass);
   backdrop-filter: blur(2px);
@@ -165,4 +118,76 @@ h2 {
 
 .retry {
   padding-top: 20px;
+}
+
+.swiper,
+.h-swiper,
+.v-swiper {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity .5s ease-out;
+
+  &[data-state="show"] {
+    opacity: 1;
+  }
+}
+
+.swiper-slide {
+  overflow: hidden;
+}
+
+.screen {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swipe-left {
+  padding-right: 50px;
+}
+
+.swipe-right {
+  text-align: right;
+}
+
+.swipe-up,
+.swipe-left,
+.swipe-right,
+.swipe-down,
+.mode {
+  span {
+    display: block;
+  }
+  strong {
+    font-size: 28px;
+  }
+}
+
+.swipe-up,
+.swipe-down {
+  text-align: center;
+}
+
+.welcome-body {
+  display: flex;
+  gap: 60px;
+  flex-direction: column;
+  padding: 20px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.mode {
+  text-align: center;
+  opacity: 0.6;
+  transform: scale(0.9);
+  // padding-top: 50px;
+  margin-bottom: -50px;
+  strong {
+    font-size: 26px;
+  }
 }

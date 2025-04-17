@@ -17,10 +17,12 @@
     "@capacitor/core": "latest",
     "@capacitor/ios": "^7.2.0",
     "sass": "^1.86.3",
-    "sudoku-gen": "^1.0.2"
+    "sudoku-gen": "^1.0.2",
+    "swiper": "^11.2.6"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",
+    "@rollup/plugin-terser": "^0.4.4",
     "vite": "^5.4.2"
   },
   "author": "James Rock",

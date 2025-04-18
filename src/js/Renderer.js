@@ -22,12 +22,7 @@ export class Renderer {
 
     this.node.width = inflate(this.width + this.offset);
     this.node.height = inflate(this.height + this.offset);
-
     this.puzzle.render(this.context, this);
-
-    this.frame = requestAnimationFrame(() => {
-      this.render();
-    });
     return this;
 
   };

@@ -57,6 +57,10 @@ if(!dailies) {
   };
 };
 
+const getPuzzle = (difficulty) => {
+  return new Sudoku(mode, difficulty, solvedHandler);
+};
+
 const getDailyPuzzle = () => {
 
   if(dailies && dailies[mode][date]) {
@@ -99,9 +103,9 @@ const startNewGame = (force = false) => {
   removeOld();
 
   renderers = [
-    new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'easy', solvedHandler), '#screen-easy'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'medium', solvedHandler), '#screen-medium'),
-    new Renderer(puzzleSize, puzzleSize, new Sudoku(mode, 'hard', solvedHandler), '#screen-hard'),
+    new Renderer(puzzleSize, puzzleSize, getPuzzle('easy'), '#screen-easy'),
+    new Renderer(puzzleSize, puzzleSize, getPuzzle('medium'), '#screen-medium'),
+    new Renderer(puzzleSize, puzzleSize, getPuzzle('hard'), '#screen-hard'),
     new Renderer(puzzleSize, puzzleSize, getDailyPuzzle(), '#screen-daily')
   ];
   
@@ -114,9 +118,7 @@ const startNewGame = (force = false) => {
 const setup = () => {
 
   renderers.forEach((r) => {
-    r.appendToTarget();
-    r.render();
-    r.stop();
+    r.appendToTarget().render();
   });
 
 };
@@ -137,7 +139,7 @@ const setPuzzle = (difficulty) => {
   
   console.log(`setPuzzle(${difficulty})`);
   
-  const active = renderers[difficultyMap[difficulty]].render();
+  const active = renderers[difficultyMap[difficulty]];
 
   renderer = active;
   puzzle = active.puzzle;
@@ -171,6 +173,12 @@ const restart = () => {
   vswiper.slideTo(1, 500);
   hswiper.enable();
   hswiper.slideTo(1, 500);
+};
+
+const move = (d) => {
+  if(!puzzle) {return};
+  puzzle.move(d);
+  renderer.render();
 };
 
 const initHandler = (swiper) => {
@@ -270,32 +278,30 @@ document.addEventListener('touchend', function() {
     };
   };
 
+  renderer && renderer.render();
+
 });
 
 document.addEventListener('drag-down', () => {
-  if(!puzzle) {return};
-  puzzle.move('down');
+  move('down');
 });
 
 document.addEventListener('drag-up', () => {
-  if(!puzzle) {return};
-  puzzle.move('up');
+  move('up');
 });
 
 document.addEventListener('drag-right', () => {
-  if(!puzzle) {return};
-  puzzle.move('right');
+  move('right');
 });
 
 document.addEventListener('drag-left', () => {
-  if(!puzzle) {return};
-  puzzle.move('left');
+  move('left');
 });
 
 document.addEventListener('keydown', (e) => {
 
   if(puzzle && isValidKey(e.code, directionKeys)) {
-    puzzle.move(directionKeysMap[e.code]);
+    move(directionKeysMap[e.code]);
   };
 
   if(isValidKey(e.code, rotateKeys)) {
@@ -306,6 +312,8 @@ document.addEventListener('keydown', (e) => {
       puzzle ? puzzle.fill() : toggleMode();
     };
   };
+
+  renderer && renderer.render();
 
 });
 

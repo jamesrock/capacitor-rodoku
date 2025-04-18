@@ -19,6 +19,7 @@ export const deflate = (value) => {
 export const makeEven = (value) => value % 2 === 1 ? value - 1 : value;
 export const getRandomIndex = (target) => Math.floor(Math.random() * target.length);
 export const getRandom = (target) => target[getRandomIndex(target)];
+export const limit = (value, max) => value > max ? max : value;
 export const getDateString = () => new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'numeric', day: 'numeric'});
 export const isDarkMode = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
 export const storage = new Storage('me.jamesrock.rodoku');

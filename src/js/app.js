@@ -1,4 +1,13 @@
-import { createNode, isValidKey, timeToDisplay, makeEven, getDateString, storage, getRandom } from './utils';
+import { 
+  createNode, 
+  isValidKey, 
+  timeToDisplay, 
+  makeEven, 
+  getDateString, 
+  storage, 
+  getRandom, 
+  limit
+} from './utils';
 import { Sudoku } from './Sudoku';
 import { Rounder } from './Rounder';
 import { Renderer } from './Renderer';
@@ -6,7 +15,6 @@ import Swiper from 'swiper';
 import { Parallax } from 'swiper/modules';
 import 'swiper/scss';
 
-const limit = (value, max) => value > max ? max : value;
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const puzzleSize = sqareSize*9;
 const solvedNode = createNode('div', 'solved');

@@ -166,6 +166,13 @@ const toggleMode = () => {
   };
 };
 
+const restart = () => {
+  vswiper.enable();
+  vswiper.slideTo(1, 500);
+  hswiper.enable();
+  hswiper.slideTo(1, 500);
+};
+
 const initHandler = (swiper) => {
   setTimeout(() => {
     swiper.el.setAttribute('data-state', 'show');
@@ -222,13 +229,6 @@ vswiper.on('beforeTransitionStart', (e) => {
 
 document.body.append(solvedNode);
 
-solvedNode.addEventListener('click', () => {
-  vswiper.enable();
-  vswiper.slideTo(1, 500);
-  hswiper.enable();
-  hswiper.slideTo(1, 500);
-});
-
 document.addEventListener('touchstart', function(e) {
 
   touch = e.touches[0];
@@ -262,7 +262,12 @@ document.addEventListener('touchmove', function(e) {
 document.addEventListener('touchend', function() {
 
   if(xMovement===0 && yMovement===0) {
-    puzzle ? puzzle.fill() : toggleMode();
+    if(gameOver) {
+      restart();
+    }
+    else {
+      puzzle ? puzzle.fill() : toggleMode();
+    };
   };
 
 });
@@ -294,7 +299,12 @@ document.addEventListener('keydown', (e) => {
   };
 
   if(isValidKey(e.code, rotateKeys)) {
-    puzzle ? puzzle.fill() : toggleMode();
+    if(gameOver) {
+      restart();
+    }
+    else {
+      puzzle ? puzzle.fill() : toggleMode();
+    };
   };
 
 });

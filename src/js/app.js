@@ -175,6 +175,12 @@ const restart = () => {
   hswiper.slideTo(1, 500);
 };
 
+const move = (d) => {
+  if(!puzzle) {return};
+  puzzle.move(d);
+  renderer.render();
+};
+
 const initHandler = (swiper) => {
   setTimeout(() => {
     swiper.el.setAttribute('data-state', 'show');
@@ -277,29 +283,25 @@ document.addEventListener('touchend', function() {
 });
 
 document.addEventListener('drag-down', () => {
-  if(!puzzle) {return};
-  puzzle.move('down');
+  move('down');
 });
 
 document.addEventListener('drag-up', () => {
-  if(!puzzle) {return};
-  puzzle.move('up');
+  move('up');
 });
 
 document.addEventListener('drag-right', () => {
-  if(!puzzle) {return};
-  puzzle.move('right');
+  move('right');
 });
 
 document.addEventListener('drag-left', () => {
-  if(!puzzle) {return};
-  puzzle.move('left');
+  move('left');
 });
 
 document.addEventListener('keydown', (e) => {
 
   if(puzzle && isValidKey(e.code, directionKeys)) {
-    puzzle.move(directionKeysMap[e.code]);
+    move(directionKeysMap[e.code]);
   };
 
   if(isValidKey(e.code, rotateKeys)) {

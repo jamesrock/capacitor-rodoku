@@ -339,3 +339,17 @@ async function loadFont(fontFamily = '', url = '', props = {}) {
   document.body.setAttribute('data-state', 'loaded');
   startNewGame();
 })();
+
+const showGuide = (rotation) => {
+  const guide = createNode('div', 'guide');
+  guide.style.transform = `rotate(${90*rotation}deg)`;
+  for(var i=0;i<81;i++) {
+    const child = createNode('div', 'guide-item');
+    child.innerHTML = i;
+    child.style.transform = `rotate(${-90*rotation}deg)`;
+    guide.append(child);
+  };
+  document.body.append(guide);
+};
+
+// showGuide(3);

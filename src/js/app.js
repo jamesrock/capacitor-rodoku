@@ -352,4 +352,17 @@ const showGuide = (rotation) => {
   document.body.append(guide);
 };
 
-// showGuide(3);
+const showGuide2 = (rotation) => {
+  const guide = createNode('div', 'guide2');
+  guide.style.transform = `rotate(${90*rotation}deg)`;
+  coordMaps[0].forEach((coord) => {
+    const child = createNode('div', 'guide-item');
+    child.innerHTML = coord.join(',');
+    child.style.transform = `rotate(${-90*rotation}deg)`;
+    guide.append(child);
+  });
+  document.body.append(guide);
+};
+
+// showGuide(0);
+// showGuide2(3);

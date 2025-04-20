@@ -115,7 +115,8 @@ const augment = (target) => {
       return [
         rotateCoords(puzzle[0], rotation),
         rotate(puzzle[1], rotation),
-        rotate(puzzle[2], rotation)
+        rotate(puzzle[2], rotation),
+        puzzle[3]
       ];
     }));
   });
@@ -157,7 +158,8 @@ const easy = augment([
       0, 9, 0, 0, 9, 0, 9, 0, 9,
       9, 9, 9, 0, 9, 9, 9, 0, 9,
       9, 0, 9, 0, 9, 0, 9, 9, 9
-    ]
+    ],
+    'easy'
   ],
   [
     [
@@ -192,7 +194,8 @@ const easy = augment([
       0, 0, 0, 0, 9, 9, 9, 9, 0,
       9, 9, 9, 9, 9, 9, 9, 9, 0,
       9, 9, 9, 9, 9, 0, 0, 0, 0
-    ]
+    ],
+    'easy'
   ],
   [
     [
@@ -227,7 +230,8 @@ const easy = augment([
       0, 9, 9, 9, 9, 0, 9, 0, 9,
       9, 0, 0, 9, 0, 9, 9, 9, 9,
       9, 0, 9, 0, 0, 0, 0, 9, 0
-    ]
+    ],
+    'easy'
   ],
   [
     [
@@ -262,11 +266,10 @@ const easy = augment([
       9, 9, 9, 9, 9, 0, 9, 0, 9,
       0, 9, 9, 9, 9, 9, 9, 0, 0,
       9, 9, 0, 0, 0, 0, 9, 9, 9
-    ]
+    ],
+    'easy'
   ]
 ]);
-
-console.log(easy);
 
 const medium = [
   // volume 1
@@ -852,6 +855,6 @@ export const puzzles = {
   hard
 };
 
-// easy - SudokuTodo easy + sudoku.org gentle, moderate, tough and diabolical
+// easy - SudokuTodo easy
 // medium - SudokuTodo medium
 // hard - SudokuTodo hard

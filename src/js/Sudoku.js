@@ -99,7 +99,6 @@ export class Sudoku {
       return new PuzzleTile(data[0], data[1], this.numbers[data[2]], this.clues[data[2]]);
     });
     this.type = type;
-		
     this.solvedHandler = solvedHandler;
 
     // console.log(this);

@@ -45,7 +45,7 @@ const rotators = [
   ]
 ];
 
-export const coordMaps = [
+const coordMaps = [
   [
     [0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [9, 0],
     [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [8, 1], [9, 1],
@@ -108,19 +108,7 @@ const rotateCoords = (values, rotate) => {
 	});
 };
 
-console.log('log', rotateCoords([
-  [0, 1, 91, 90, 0],
-  [1, 5, 15, 12, 22, 24, 44, 43, 33, 31, 1],
-  [5, 9, 19, 17, 27, 22, 12, 15, 5],
-  [17, 19, 39, 35, 55, 54, 24, 27, 17],
-  [35, 39, 59, 58, 68, 67, 57, 55, 35],
-  [31, 33, 43, 44, 64, 62, 72, 71, 31],
-  [54, 57, 67, 68, 88, 87, 77, 76, 66, 65, 85, 83, 73, 74, 54],
-  [62, 64, 74, 73, 83, 86, 96, 91, 71, 72, 62],
-  [58, 59, 99, 96, 86, 85, 65, 66, 76, 77, 87, 88, 58]
-], 1));
-
-const addTo = (target) => {
+const augment = (target) => {
   let newPuzzles = [];
   target.forEach((puzzle) => {
     newPuzzles = newPuzzles.concat([0, 1, 2, 3].map((rotation) => {
@@ -134,7 +122,7 @@ const addTo = (target) => {
   return newPuzzles;
 };
 
-let easy = addTo([
+let easy = augment([
   // volume 1
   [
     [

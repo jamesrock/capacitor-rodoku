@@ -71,8 +71,7 @@ export class Sudoku {
 			case 'jigsaw':
 
 				if(target==='last') {
-					// sudoku = saved ? saved : puzzles[difficulty][puzzles[difficulty].length-1];
-					sudoku = saved ? saved : puzzles[difficulty][7];
+					sudoku = saved ? saved : puzzles[difficulty][puzzles[difficulty].length-1];
 				}
 				else {
 					sudoku = saved ? saved : getRandom(puzzles[difficulty]);

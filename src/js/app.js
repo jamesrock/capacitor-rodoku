@@ -51,10 +51,16 @@ let mode = 'standard';
 
 if(!times) {
   times = {
-    'easy': 0,
-    'medium': 0,
-    'hard': 0,
-    'expert': 0
+    'standard': {
+      'easy': 0,
+      'medium': 0,
+      'hard': 0
+    },
+    'jigsaw': {
+      'easy': 0,
+      'medium': 0,
+      'hard': 0
+    }
   };
 };
 
@@ -83,8 +89,8 @@ const getDailyPuzzle = () => {
 
 const solvedHandler = () => {
   const time = (Date.now() - start);
-  if(times[puzzle.difficulty]===0||time<times[puzzle.difficulty]) {
-    times[puzzle.difficulty] = time;
+  if(times[puzzle.type][puzzle.difficulty]===0||time<times[puzzle.type][puzzle.difficulty]) {
+    times[puzzle.type][puzzle.difficulty] = time;
     storage.set('times', times);
   };
   solvedNode.innerHTML = `<div class="game-over-body">\

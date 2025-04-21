@@ -185,9 +185,31 @@ h2 {
   text-align: center;
   opacity: 0.6;
   transform: scale(0.9);
-  // padding-top: 50px;
   margin-bottom: -50px;
   strong {
     font-size: 26px;
   }
+}
+
+.guide,
+.guide2 {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: white;
+  z-index: 1;
+  &-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.guide2 {
+  width: 500px;
+  height: 500px;
 }

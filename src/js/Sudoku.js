@@ -46,7 +46,7 @@ const colors = {
 const getColor = (key) => colors[isDarkMode() ? 'dark' : 'light'][key];
 
 const mode = 'play'; // 'allbutone', 'answers', 'play'
-const target = 'last'; // 'last', 'random'
+const target = 'random'; // 'last', 'random'
 
 export class Sudoku {
 	constructor(type, difficulty, solvedHandler, saved) {

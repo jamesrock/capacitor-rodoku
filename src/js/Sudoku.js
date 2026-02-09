@@ -1,6 +1,7 @@
 import { getSudoku } from 'sudoku-gen';
 import { puzzles } from './puzzles';
-import { inflate, getRandom, isDarkMode } from './utils';
+import { inflate } from './utils';
+import { getRandom, isDarkMode } from '@jamesrock/rockjs';
 
 const standardOverlay = [
   [[0, 0], [3, 0], [3, 3], [0, 3], [0, 0]],

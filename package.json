@@ -16,6 +16,7 @@
   "dependencies": {
     "@capacitor/core": "latest",
     "@capacitor/ios": "^7.2.0",
+    "@jamesrock/rockjs": "^1.4.0",
     "sass": "^1.86.3",
     "sudoku-gen": "^1.0.2",
     "swiper": "^11.2.6"

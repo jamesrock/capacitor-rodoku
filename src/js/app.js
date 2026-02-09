@@ -1,13 +1,13 @@
+import { storage } from './utils';
 import { 
   createNode, 
   isValidKey, 
-  timeToDisplay, 
+  formatTime, 
   makeEven, 
   getDateString, 
-  storage, 
   getRandom, 
   limit
-} from './utils';
+} from '@jamesrock/rockjs';
 import { Sudoku } from './Sudoku';
 import { Rounder } from './Rounder';
 import { Renderer } from './Renderer';
@@ -95,8 +95,8 @@ const solvedHandler = () => {
   };
   solvedNode.innerHTML = `<div class="game-over-body">\
     <h2>Solved!</h2>\
-    <p class="time">Time: ${timeToDisplay(time)}</p>\
-    <p class="best">Best: ${timeToDisplay(times[puzzle.difficulty])}</p>\
+    <p class="time">Time: ${formatTime(time)}</p>\
+    <p class="best">Best: ${formatTime(times[puzzle.difficulty])}</p>\
     <p class="retry">Tap to try again.</p>\
   </div>`;
   solvedNode.setAttribute('data-state', 'pre-show');

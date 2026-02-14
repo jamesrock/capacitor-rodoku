@@ -1,12 +1,7 @@
 {
   "name": "capacitor-rodoku",
   "version": "1.0.0",
-  "description": "An Amazing Capacitor App",
   "type": "module",
-  "keywords": [
-    "capacitor",
-    "mobile"
-  ],
   "scripts": {
     "start": "vite",
     "build": "vite build",
@@ -16,15 +11,14 @@
   "dependencies": {
     "@capacitor/core": "latest",
     "@capacitor/ios": "^7.2.0",
-    "@jamesrock/rockjs": "^1.4.0",
-    "sass": "^1.86.3",
+    "@jamesrock/rockjs": "^1.9.0",
     "sudoku-gen": "^1.0.2",
     "swiper": "^11.2.6"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",
     "@rollup/plugin-terser": "^0.4.4",
-    "vite": "^5.4.2"
+    "vite": "^7.3.1"
   },
   "author": "James Rock",
   "license": "ISC"

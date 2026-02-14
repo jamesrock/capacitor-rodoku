@@ -1,3 +1,4 @@
+import '../css/app.css';
 import { storage } from './utils';
 import { 
   createNode, 

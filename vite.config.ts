@@ -16,11 +16,4 @@ export default defineConfig({
       plugins: [terser()]
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern',
-      },
-    },
-  },
 });

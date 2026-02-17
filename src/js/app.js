@@ -1,4 +1,5 @@
 import '../css/app.css';
+import 'swiper/css';
 import { storage } from './utils';
 import { 
   createNode, 
@@ -12,9 +13,8 @@ import {
 import { Sudoku } from './Sudoku';
 import { Rounder } from './Rounder';
 import { Renderer } from './Renderer';
-import Swiper from 'swiper';
 import { Parallax } from 'swiper/modules';
-import 'swiper/scss';
+import Swiper from 'swiper';
 
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const puzzleSize = sqareSize*9;

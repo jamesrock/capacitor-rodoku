@@ -28,10 +28,8 @@
   --glass: rgba(255, 255, 255, 0.8);
   --highlight-color: yellow;
   --input-color: darkviolet;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
+  @media (prefers-color-scheme: dark) {
     --pre-background: black;
     --background: #333;
     --foreground: snow;
@@ -41,6 +39,7 @@
     --highlight-color: rgb(69, 69, 21);
     --input-color: rgb(232, 163, 60);
   }
+
 }
 
 * {

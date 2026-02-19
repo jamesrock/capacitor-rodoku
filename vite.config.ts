@@ -8,11 +8,6 @@ export default defineConfig({
     minify: false,
     emptyOutDir: true,
     rollupOptions: {
-      input: {
-        index: './src/index.html',
-        about: './src/about.html',
-        privacy: './src/privacy.html',
-      },
       plugins: [terser()]
     },
   },

@@ -1,9 +1,7 @@
-import { Storage } from '@jamesrock/rockjs';
-const pixelRatio = window.devicePixelRatio||1;
-export const inflate = (value) => {
-	return value*pixelRatio;
-};
-export const deflate = (value) => {
-	return value/pixelRatio;
-};
+import { 
+	Storage,
+	Scaler
+} from '@jamesrock/rockjs';
+
+export const scaler = new Scaler(window.devicePixelRatio||1);
 export const storage = new Storage('me.jamesrock.rodoku');

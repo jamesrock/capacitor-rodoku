@@ -1,6 +1,6 @@
 import { getSudoku } from 'sudoku-gen';
 import { puzzles } from './puzzles';
-import { inflate } from './utils';
+import { scaler } from './utils';
 import { getRandom, isDarkMode } from '@jamesrock/rockjs';
 
 const standardOverlay = [
@@ -109,7 +109,7 @@ export class Sudoku {
 	};
 	render(ctx, renderer) {
     
-		const size = inflate(renderer.width/9);
+		const size = scaler.inflate(renderer.width/9);
 		const offset = renderer.offset;
 
     // console.log(size);
@@ -141,14 +141,14 @@ export class Sudoku {
 			ctx.fillText(
 				tile.display===0?'':tile.display, 
 				(tile.x * size) + (size/2) + offset, 
-				(tile.y * size) + ((size/2)+inflate(1)) + offset
+				(tile.y * size) + ((size/2)+scaler.inflate(1)) + offset
 			);
 
 		});
 
 		this.overlay.forEach((coords) => {
 			coords.forEach((bob, index) => {
-				ctx.lineWidth = inflate(3);
+				ctx.lineWidth = scaler.inflate(3);
 				ctx.lineCap = 'square';
 				ctx.strokeStyle = getColor('stroke');
 				ctx.moveTo(
@@ -168,7 +168,7 @@ export class Sudoku {
 		});
 
 		[1, 2, 3, 4, 5, 6, 7, 8].forEach((x) => {
-			ctx.lineWidth = inflate(1);
+			ctx.lineWidth = scaler.inflate(1);
 			ctx.lineCap = 'square';
 			ctx.moveTo(
 				(x*size) + offset,
@@ -182,7 +182,7 @@ export class Sudoku {
 		});
 
 		[1, 2, 3, 4, 5, 6, 7, 8].forEach((y) => {
-			ctx.lineWidth = inflate(1);
+			ctx.lineWidth = scaler.inflate(1);
 			ctx.lineCap = 'square';
 			ctx.moveTo(
 				offset,

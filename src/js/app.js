@@ -2,6 +2,7 @@ import '/css/app.css';
 import 'swiper/css';
 import { storage } from './utils';
 import { 
+  Rounder,
   createNode, 
   isValidKey, 
   formatTime, 
@@ -11,7 +12,6 @@ import {
   limit
 } from '@jamesrock/rockjs';
 import { Sudoku } from './Sudoku';
-import { Rounder } from './Rounder';
 import { Renderer } from './Renderer';
 import { Parallax } from 'swiper/modules';
 import Swiper from 'swiper';

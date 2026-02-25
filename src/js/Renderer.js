@@ -1,11 +1,11 @@
-import { inflate } from './utils';
+import { scaler } from './utils';
 
 export class Renderer {
   constructor(width, height, puzzle, target) {
 
     // console.log('new Renderer()', this);
 
-    this.offset = inflate(3/2);
+    this.offset = scaler.inflate(3/2);
     this.width = width;
     this.height = height;
     this.puzzle = puzzle;
@@ -20,8 +20,8 @@ export class Renderer {
   };
   render() {
 
-    this.node.width = inflate(this.width + this.offset);
-    this.node.height = inflate(this.height + this.offset);
+    this.node.width = scaler.inflate(this.width + this.offset);
+    this.node.height = scaler.inflate(this.height + this.offset);
     this.puzzle.render(this.context, this);
     return this;
 

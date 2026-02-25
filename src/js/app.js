@@ -1,4 +1,4 @@
-import '../css/app.css';
+import '/css/app.css';
 import 'swiper/css';
 import { storage } from './utils';
 import { 

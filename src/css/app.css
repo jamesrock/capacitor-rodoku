@@ -151,6 +151,8 @@ h2 {
     border-radius: 6px;
     font-size: inherit;
     cursor: pointer;
+    font-weight: 900;
+    text-transform: uppercase;
   }
 }
 

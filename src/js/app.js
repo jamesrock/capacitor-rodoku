@@ -1,12 +1,11 @@
 import '/css/app.css';
 import 'swiper/css';
-import { storage } from './utils';
+import { storage, createToggle } from './utils';
 import { 
   Rounder,
   createNode,
   createContainer,
   createButton,
-  createInput,
   isValidKey,
   formatTime,
   makeEven,
@@ -16,6 +15,11 @@ import { Sudoku } from './Sudoku';
 import { Renderer } from './Renderer';
 
 const app = document.querySelector('#app');
+const footer = createNode('div', 'footer');
+const toggleContainer = createNode('form');
+const difficultToggle = createToggle(['easy', 'medium', 'hard'], 'difficulty', 'easy');
+const typeToggle = createToggle(['standard', 'jigsaw'], 'mode', 'standard');
+const newGameButton = createButton('new');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const puzzleSize = sqareSize*9;
 const solvedNode = createNode('div', 'solved');
@@ -45,6 +49,12 @@ let difficulty = 'easy';
 app.append(board);
 app.append(solvedNode);
 app.append(eventsNode);
+
+toggleContainer.append(difficultToggle);
+toggleContainer.append(typeToggle);
+footer.append(toggleContainer);
+footer.append(newGameButton);
+app.append(footer);
 
 if(!times) {
   times = {
@@ -182,51 +192,9 @@ document.addEventListener('keydown', (e) => {
 
 });
 
-startNewGame();
+toggleContainer.addEventListener('input', () => {
 
-const createRadio = (value = 0, name = '{name}', id = '{id}', checked = false) => {
-  const node = createInput(value, 'radio');
-  node.name = name;
-  node.id = id;
-  node.checked = checked;
-  return node;
-};
-
-const createLabel = (label = '{label}', id = '{id}') => {
-  const node = createNode('label');
-  node.innerHTML = label;
-  node.setAttribute('for', id);
-  return node;
-};
-
-const createToggle = (options, id, defaultValue) => {
-  const node = createNode('div', 'toggle');
-  options.forEach((option) => {
-    const optionNode = createNode('div', 'toggle-item');
-    const radio = createRadio(option, id, `${option}-${id}`, option===defaultValue);
-    const label = createLabel(option, radio.id);
-    optionNode.append(radio);
-    optionNode.append(label);
-    node.append(optionNode);
-  });
-  return node;
-};
-
-const footer = createNode('form', 'footer');
-const toggleContainer = createContainer();
-const difficultToggle = createToggle(['easy', 'medium', 'hard'], 'difficulty', 'easy');
-const typeToggle = createToggle(['standard', 'jigsaw'], 'mode', 'standard');
-const newGameButton = createButton('new');
-
-toggleContainer.append(difficultToggle);
-toggleContainer.append(typeToggle);
-footer.append(toggleContainer);
-footer.append(newGameButton);
-app.append(footer);
-
-footer.addEventListener('input', () => {
-
-  const data = new FormData(footer);
+  const data = new FormData(toggleContainer);
 	difficulty = data.get('difficulty');
 	mode = data.get('mode');
 
@@ -239,3 +207,5 @@ newGameButton.addEventListener('click', () => {
   startNewGame(true);
 
 });
+
+startNewGame();

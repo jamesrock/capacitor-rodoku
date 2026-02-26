@@ -130,11 +130,11 @@ eventsNode.addEventListener('touchmove', (e) => {
   const y = rounder.round(clientY - originalClientY);
 
   if(x !== xMovement) {
-    this.dispatchEvent(new Event(x > xMovement ? 'drag-right' : 'drag-left'));
+    eventsNode.dispatchEvent(new Event(x > xMovement ? 'drag-right' : 'drag-left'));
   };
 
   if(y !== yMovement) {
-    this.dispatchEvent(new Event(y > yMovement ? 'drag-down' : 'drag-up'));
+    eventsNode.dispatchEvent(new Event(y > yMovement ? 'drag-down' : 'drag-up'));
   };
 
   xMovement = x;

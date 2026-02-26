@@ -7,6 +7,7 @@ import {
 } from './utils';
 import { 
   Rounder,
+  setDocumentHeight,
   createNode,
   createButton,
   isValidKey,
@@ -16,6 +17,8 @@ import {
 } from '@jamesrock/rockjs';
 import { Sudoku } from './Sudoku';
 import { Renderer } from './Renderer';
+
+setDocumentHeight();
 
 const app = document.querySelector('#app');
 const footer = createNode('div', 'footer');
@@ -85,13 +88,14 @@ const solvedHandler = () => {
   };
   solvedNode.innerHTML = `<div class="game-over-body">\
     <h2>Solved!</h2>\
-    <p class="time">Time: ${formatTime(time)}</p>\
+    <p class="time">${formatTime(time)}</p>\
     <p class="best">Best: ${formatTime(times[puzzle.type][puzzle.difficulty])}</p>\
-    <p class="retry">Tap to try again.</p>\
+    <p class="continue">Tap to continue</p>\
   </div>`;
   solvedNode.setAttribute('data-state', 'pre-show');
   setTimeout(() => {
     solvedNode.setAttribute('data-state', 'show');
+    app.setAttribute('data-game-over', true);
   }, 250);
   puzzle = null;
 };
@@ -103,6 +107,8 @@ const startNewGame = () => {
   if(renderer) {
     renderer.destroy();
   };
+
+  app.setAttribute('data-game-over', false);
 
   renderer = new Renderer(puzzleSize, puzzleSize, getPuzzle(difficulty));
   puzzle = renderer.puzzle;
@@ -144,10 +150,10 @@ eventsNode.addEventListener('touchmove', (e) => {
 
 eventsNode.addEventListener('touchend', () => {
 
-  if(puzzle && xMovement===0 && yMovement===0) {
-    puzzle.fill();
+  if(xMovement === 0 && yMovement === 0) {
+    puzzle ? puzzle.fill() : startNewGame();
   };
-
+  
 });
 
 eventsNode.addEventListener('drag-down', () => {
@@ -168,12 +174,12 @@ eventsNode.addEventListener('drag-left', () => {
 
 document.addEventListener('keydown', (e) => {
 
-  if(puzzle && isValidKey(e.code, directionKeys)) {
+  if(isValidKey(e.code, directionKeys)) {
     puzzle.move(directionKeysMap[e.code]);
   };
 
-  if(puzzle && isValidKey(e.code, rotateKeys)) {
-    puzzle.fill();
+  if(isValidKey(e.code, rotateKeys)) {
+    puzzle ? puzzle.fill() : startNewGame();
   };
 
 });

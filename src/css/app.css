@@ -24,7 +24,7 @@
   --foreground: #222;
   --border: #d4d4d4;
   --puzzle-background: white;
-  --glass: rgba(255, 255, 255, 0.8);
+  --glass: rgba(255, 250, 240, 0.8);
   --highlight-color: yellow;
   --input-color: darkviolet;
 
@@ -55,27 +55,21 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100dvh;
+  align-items: start;
+  height: 100%;
   box-sizing: border-box;
-  transition: background-color 500ms ease-out;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  &[data-state="loaded"] {
-    background-color: var(--background);
-  }
-}
 
-main {
-  max-width: 600px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 20px;
-  text-align: center;
+  @media (max-width: 600px) {
+    padding-top: 150px;
+  }
+  
+  @media (min-width: 600px) {
+    align-items: center;
+  }
+
 }
 
 h2 {
@@ -85,9 +79,13 @@ h2 {
   font-size: 40px;
 }
 
+canvas {
+  display: block;
+}
+
 .solved {
   background-color: var(--glass);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
   position: absolute;
   inset: 0;
   z-index: 9999;
@@ -96,6 +94,22 @@ h2 {
   align-items: center;
   text-align: center;
   transition: opacity .25s;
+  pointer-events: none;
+  text-transform: uppercase;
+
+  .time {
+    font-size: 40px;
+    line-height: 1;
+  }
+
+  .best {
+    font-size: 20px;
+  }
+
+  .continue {
+    padding-top: 20px;
+  }
+
   &[data-state="hidden"] {
     display: none;
   }
@@ -105,15 +119,15 @@ h2 {
   &[data-state="show"] {
     opacity: 1;
   }
+
 }
 
-.time,
-.best {
-  font-size: 22px;
-}
-
-.retry {
-  padding-top: 20px;
+.board {
+  transition: opacity .25s;
+  margin-bottom: 10px;
+  [data-game-over="true"] & {
+    opacity: 0.5;
+  }
 }
 
 .guide,

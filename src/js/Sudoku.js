@@ -97,7 +97,7 @@ export class Sudoku {
 
 		this.data = sudoku;
 		this.values = saved ? saved[1] : this.numbers.map((value, index) => !!this.clues[index] ? value : 0);
-    this.tiles = tileMap.map(([x, y, index]) => new PuzzleTile(this, x, y, this.values[index], !!this.clues[index], index));
+    this.tiles = tileMap.map(([x, y, index]) => new PuzzleTile(this, x, y, this.numbers[index], !!this.clues[index], this.values[index], index));
     this.type = type;
     this.solvedHandler = solvedHandler;
 		this.updateHandler = updateHandler;
@@ -270,12 +270,12 @@ export class Sudoku {
 };
 
 class PuzzleTile {
-	constructor(puzzle, x, y, value = 0, clue = false, id) {
+	constructor(puzzle, x, y, value = 0, clue = false, display = 0, id) {
 
 		this.puzzle = puzzle;
 		this.value = value;
 		this.clue = clue;
-		this.display = value;
+		this.display = display;
 		this.x = x;
 		this.y = y;
 		this.id = id;

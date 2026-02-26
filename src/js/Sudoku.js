@@ -50,14 +50,14 @@ const mode = 'play'; // 'allbutone', 'answers', 'play'
 const target = 'random'; // 'last', 'random'
 
 export class Sudoku {
-	constructor(type, difficulty, solvedHandler, saved) {
+	constructor(type, difficulty, solvedHandler, updateHandler, saved) {
 
 		let sudoku = null;
 
 		switch(type) {
 			case 'standard':
 				
-				sudoku = saved ? saved : getSudoku(difficulty);
+				sudoku = saved ? saved[0] : getSudoku(difficulty);
 
 				this.overlay = standardOverlay;
 				this.numbers = sudoku.solution.split('').map((item) => {
@@ -72,10 +72,10 @@ export class Sudoku {
 			case 'jigsaw':
 
 				if(target==='last') {
-					sudoku = saved ? saved : puzzles[difficulty][puzzles[difficulty].length-4];
+					sudoku = saved ? saved[0] : puzzles[difficulty][puzzles[difficulty].length-4];
 				}
 				else {
-					sudoku = saved ? saved : getRandom(puzzles[difficulty]);
+					sudoku = saved ? saved[0] : getRandom(puzzles[difficulty]);
 				};
 
 				this.overlay = sudoku[0];
@@ -96,11 +96,11 @@ export class Sudoku {
 		};
 
 		this.data = sudoku;
-    this.tiles = tileMap.map((data) => {
-      return new PuzzleTile(data[0], data[1], this.numbers[data[2]], this.clues[data[2]]);
-    });
+		this.values = saved ? saved[1] : this.numbers.map((value, index) => !!this.clues[index] ? value : 0);
+    this.tiles = tileMap.map(([x, y, index]) => new PuzzleTile(this, x, y, this.values[index], !!this.clues[index], index));
     this.type = type;
     this.solvedHandler = solvedHandler;
+		this.updateHandler = updateHandler;
 
 		this.highlight();
 
@@ -247,6 +247,7 @@ export class Sudoku {
 			return tile.display===tile.value;
 		}).length;
 		console.log('correct', correct);
+		this.updateHandler();
 		if(correct===81) {
 			this.solvedHandler();
 		};
@@ -261,7 +262,7 @@ export class Sudoku {
 	};
 	getSaveObject() {
 
-		return this.data;
+		return [this.data, this.values, this.type, this.difficulty];
 
 	};
 	activeX = 0;
@@ -269,14 +270,16 @@ export class Sudoku {
 };
 
 class PuzzleTile {
-	constructor(x, y, value = 0, clue = 1) {
+	constructor(puzzle, x, y, value = 0, clue = false, id) {
 
-		this.name = `x${x}y${y}`;
+		this.puzzle = puzzle;
 		this.value = value;
 		this.clue = clue;
-		this.display = this.clue ? this.value : 0;
+		this.display = value;
 		this.x = x;
 		this.y = y;
+		this.id = id;
+		this.name = `x${x}y${y}`;
 
 	};
 	increment() {
@@ -288,6 +291,8 @@ class PuzzleTile {
 		else {
 			this.display ++;
 		};
+
+		this.puzzle.values[this.id] = this.display;
 		return this;
 
 	};

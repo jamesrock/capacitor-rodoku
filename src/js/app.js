@@ -23,8 +23,6 @@ setDocumentHeight();
 const app = document.querySelector('#app');
 const footer = createNode('div', 'footer');
 const toggleContainer = createNode('form');
-const difficultToggle = createToggle(['easy', 'medium', 'hard'], 'difficulty', 'easy');
-const typeToggle = createToggle(['standard', 'jigsaw'], 'mode', 'standard');
 const newGameButton = createButton('new');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const puzzleSize = sqareSize*9;
@@ -39,24 +37,33 @@ const directionKeysMap = {
   'ArrowRight': 'right'
 };
 const directionKeys = Object.keys(directionKeysMap);
-const savedGame = storage.get('saved');
 const board = createNode('div', 'board');
+let savedGame = storage.get('saved');
 let times = storage.get('times');
 let start = 0;
 let touch = null;
 let xMovement = 0;
 let yMovement = 0;
+let movement = 0;
 let puzzle = null;
 let renderer = null;
 let mode = 'standard';
 let difficulty = 'easy';
+
+if(savedGame) {
+  mode = savedGame[2];
+  difficulty = savedGame[3];
+};
+
+const modeToggle = createToggle(['standard', 'jigsaw'], 'mode', mode);
+const difficultToggle = createToggle(['easy', 'medium', 'hard'], 'difficulty', difficulty);
 
 app.append(board);
 app.append(solvedNode);
 app.append(eventsNode);
 
 toggleContainer.append(difficultToggle);
-toggleContainer.append(typeToggle);
+toggleContainer.append(modeToggle);
 footer.append(toggleContainer);
 footer.append(newGameButton);
 app.append(footer);
@@ -76,9 +83,7 @@ if(!times) {
   };
 };
 
-const getPuzzle = (difficulty) => {
-  return new Sudoku(mode, difficulty, solvedHandler);
-};
+const getPuzzle = () => new Sudoku(mode, difficulty, solvedHandler, updateHandler, savedGame);
 
 const solvedHandler = () => {
   const time = (Date.now() - start);
@@ -100,7 +105,27 @@ const solvedHandler = () => {
   puzzle = null;
 };
 
+const updateHandler = () => {
+
+  storage.set('saved', puzzle.getSaveObject());
+
+};
+
 const startNewGame = () => {
+
+  savedGame = null;
+  storage.set('saved', savedGame);
+  init();
+
+};
+
+const openSaved = () => {
+
+  init();
+
+};
+
+const init = () => {
 
   solvedNode.setAttribute('data-state', 'hidden');
 
@@ -110,7 +135,7 @@ const startNewGame = () => {
 
   app.setAttribute('data-game-over', false);
 
-  renderer = new Renderer(puzzleSize, puzzleSize, getPuzzle(difficulty));
+  renderer = new Renderer(puzzleSize, puzzleSize, getPuzzle());
   puzzle = renderer.puzzle;
   start = Date.now();
 
@@ -121,6 +146,7 @@ const startNewGame = () => {
 eventsNode.addEventListener('touchstart', (e) => {
 
   touch = e.touches[0];
+  movement = 0;
   xMovement = 0;
   yMovement = 0;
 
@@ -145,12 +171,13 @@ eventsNode.addEventListener('touchmove', (e) => {
 
   xMovement = x;
   yMovement = y;
+  movement += (xMovement + yMovement);
 
 });
 
 eventsNode.addEventListener('touchend', () => {
 
-  if(xMovement === 0 && yMovement === 0) {
+  if(movement === 0) {
     puzzle ? puzzle.fill() : startNewGame();
   };
   
@@ -200,4 +227,9 @@ newGameButton.addEventListener('click', () => {
 
 });
 
-startNewGame();
+if(savedGame) {
+  openSaved();  
+}
+else {
+  startNewGame();
+};

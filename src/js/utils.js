@@ -31,3 +31,5 @@ export const createToggle = (options, id, defaultValue) => {
   });
   return node;
 };
+
+export const getDefaultTime = () => (1000 * 60 * 60);

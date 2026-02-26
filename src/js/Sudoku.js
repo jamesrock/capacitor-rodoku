@@ -40,7 +40,7 @@ const colors = {
 		'foreground': 'black',
 		'stroke': 'black',
 		'highlight': 'rgb(255,255,0)',
-		'input': 'rgb(148,0,211)'
+		'input': 'magenta'
 	}
 };
 
@@ -102,8 +102,6 @@ export class Sudoku {
     this.type = type;
     this.solvedHandler = solvedHandler;
 
-    // console.log(this);
-
 		this.highlight();
 
 	};
@@ -111,8 +109,6 @@ export class Sudoku {
     
 		const size = scaler.inflate(renderer.width/9);
 		const offset = renderer.offset;
-
-    // console.log(size);
 
 		ctx.fillStyle = 'grey';
 		ctx.fillRect(
@@ -202,8 +198,6 @@ export class Sudoku {
 
 	};
 	move(direction) {
-
-		console.log(`move(${direction})`);
 
 		switch(direction) {
 			case 'up':

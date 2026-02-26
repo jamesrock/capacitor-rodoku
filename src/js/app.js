@@ -1,10 +1,13 @@
 import '/css/app.css';
 import 'swiper/css';
-import { storage, createToggle } from './utils';
+import { 
+  storage, 
+  createToggle,
+  getDefaultTime
+} from './utils';
 import { 
   Rounder,
   createNode,
-  createContainer,
   createButton,
   isValidKey,
   formatTime,
@@ -40,7 +43,6 @@ let start = 0;
 let touch = null;
 let xMovement = 0;
 let yMovement = 0;
-let gameOver = true;
 let puzzle = null;
 let renderer = null;
 let mode = 'standard';
@@ -59,14 +61,14 @@ app.append(footer);
 if(!times) {
   times = {
     'standard': {
-      'easy': 0,
-      'medium': 0,
-      'hard': 0
+      'easy': getDefaultTime(),
+      'medium': getDefaultTime(),
+      'hard': getDefaultTime()
     },
     'jigsaw': {
-      'easy': 0,
-      'medium': 0,
-      'hard': 0
+      'easy': getDefaultTime(),
+      'medium': getDefaultTime(),
+      'hard': getDefaultTime()
     }
   };
 };
@@ -77,27 +79,24 @@ const getPuzzle = (difficulty) => {
 
 const solvedHandler = () => {
   const time = (Date.now() - start);
-  if(times[puzzle.type][puzzle.difficulty]===0||time<times[puzzle.type][puzzle.difficulty]) {
+  if(time < times[puzzle.type][puzzle.difficulty]) {
     times[puzzle.type][puzzle.difficulty] = time;
     storage.set('times', times);
   };
   solvedNode.innerHTML = `<div class="game-over-body">\
     <h2>Solved!</h2>\
     <p class="time">Time: ${formatTime(time)}</p>\
-    <p class="best">Best: ${formatTime(times[puzzle.difficulty])}</p>\
+    <p class="best">Best: ${formatTime(times[puzzle.type][puzzle.difficulty])}</p>\
     <p class="retry">Tap to try again.</p>\
   </div>`;
   solvedNode.setAttribute('data-state', 'pre-show');
   setTimeout(() => {
     solvedNode.setAttribute('data-state', 'show');
   }, 250);
-  gameOver = true;
   puzzle = null;
 };
 
-const startNewGame = (force = false) => {
-  
-  if(!force&&!gameOver) {return};
+const startNewGame = () => {
 
   solvedNode.setAttribute('data-state', 'hidden');
 
@@ -108,22 +107,9 @@ const startNewGame = (force = false) => {
   renderer = new Renderer(puzzleSize, puzzleSize, getPuzzle(difficulty));
   puzzle = renderer.puzzle;
   start = Date.now();
-  
-  gameOver = false;
-
-  setup();
-
-};
-
-const setup = () => {
 
   renderer.appendTo(board).render();
 
-};
-
-const move = (d) => {
-  if(!puzzle) {return};
-  puzzle.move(d);
 };
 
 eventsNode.addEventListener('touchstart', (e) => {
@@ -165,25 +151,25 @@ eventsNode.addEventListener('touchend', () => {
 });
 
 eventsNode.addEventListener('drag-down', () => {
-  move('down');
+  puzzle.move('down');
 });
 
 eventsNode.addEventListener('drag-up', () => {
-  move('up');
+  puzzle.move('up');
 });
 
 eventsNode.addEventListener('drag-right', () => {
-  move('right');
+  puzzle.move('right');
 });
 
 eventsNode.addEventListener('drag-left', () => {
-  move('left');
+  puzzle.move('left');
 });
 
 document.addEventListener('keydown', (e) => {
 
   if(puzzle && isValidKey(e.code, directionKeys)) {
-    move(directionKeysMap[e.code]);
+    puzzle.move(directionKeysMap[e.code]);
   };
 
   if(puzzle && isValidKey(e.code, rotateKeys)) {
@@ -198,13 +184,13 @@ toggleContainer.addEventListener('input', () => {
 	difficulty = data.get('difficulty');
 	mode = data.get('mode');
 
-  startNewGame(true);
+  startNewGame();
 
 });
 
 newGameButton.addEventListener('click', () => {
   
-  startNewGame(true);
+  startNewGame();
 
 });
 

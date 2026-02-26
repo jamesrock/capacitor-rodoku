@@ -8,7 +8,7 @@ import {
   setDocumentHeight,
   createNode,
   createButton,
-  createToggle,
+  makeToggle,
   isValidKey,
   formatTime,
   makeEven,
@@ -54,8 +54,8 @@ if(savedGame) {
   difficulty = savedGame[3];
 };
 
-const modeToggle = createToggle(['standard', 'jigsaw'], 'mode', mode);
-const difficultToggle = createToggle(['easy', 'medium', 'hard'], 'difficulty', difficulty);
+const modeToggle = makeToggle(['standard', 'jigsaw'].map((value) => [value, value]), 'mode', mode);
+const difficultToggle = makeToggle(['easy', 'medium', 'hard'].map((value) => [value, value]), 'difficulty', difficulty);
 
 app.append(board);
 app.append(solvedNode);

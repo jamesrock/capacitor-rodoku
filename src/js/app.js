@@ -1,15 +1,14 @@
 import '/css/app.css';
-import 'swiper/css';
-import { 
-  storage, 
-  createToggle,
+import {
+  storage,
   getDefaultTime
 } from './utils';
-import { 
+import {
   Rounder,
   setDocumentHeight,
   createNode,
   createButton,
+  createToggle,
   isValidKey,
   formatTime,
   makeEven,
@@ -155,7 +154,7 @@ eventsNode.addEventListener('touchstart', (e) => {
 }, {passive: false});
 
 eventsNode.addEventListener('touchmove', (e) => {
-  
+
   const {clientX: originalClientX, clientY: originalClientY} = touch;
   const {clientX, clientY} = e.touches[0];
   const x = rounder.round(clientX - originalClientX);
@@ -180,7 +179,7 @@ eventsNode.addEventListener('touchend', () => {
   if(movement === 0) {
     puzzle ? puzzle.fill() : startNewGame();
   };
-  
+
 });
 
 eventsNode.addEventListener('drag-down', () => {
@@ -222,13 +221,13 @@ toggleContainer.addEventListener('input', () => {
 });
 
 newGameButton.addEventListener('click', () => {
-  
+
   startNewGame();
 
 });
 
 if(savedGame) {
-  openSaved();  
+  openSaved();
 }
 else {
   startNewGame();

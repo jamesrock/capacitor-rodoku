@@ -197,7 +197,9 @@ export class Sudoku {
 
 	};
 	getValues() {
+		
 		return this.data;
+
 	};
 	move(direction) {
 
@@ -224,20 +226,29 @@ export class Sudoku {
 
 		this.highlight();
 
+		return this;
+
 	};
 	highlight() {
+
 		const active = this.getActive();
 		this.tiles.forEach((tile) => {
 			tile.highlight = false;
 		});
 		active.highlight = true;
+		return this;
+
 	};
 	fill() {
+
 		const active = this.getActive();
 		active.increment();
 		this.checkForWin();
+		return this;
+
 	};
 	checkForWin() {
+
 		const correct = this.tiles.filter((tile) => {
 			return tile.display===tile.value;
 		}).length;
@@ -245,14 +256,19 @@ export class Sudoku {
 		if(correct===81) {
 			this.solvedHandler();
 		};
+
 	};
 	getActive() {
+
 		return this.tiles.filter((tile) => {
 			return tile.name === `x${this.activeX}y${this.activeY}`;
 		})[0];
+
 	};
 	getSaveObject() {
+
 		return this.data;
+
 	};
 	activeX = 0;
 	activeY = 0;
@@ -270,6 +286,7 @@ class PuzzleTile {
 
 	};
 	increment() {
+
 		if(this.clue) {return};
 		if(this.display===9) {
 			this.display = 0;
@@ -278,6 +295,7 @@ class PuzzleTile {
 			this.display ++;
 		};
 		return this;
+
 	};
 	highlight = false;
 };

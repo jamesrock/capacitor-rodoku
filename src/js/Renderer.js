@@ -1,15 +1,12 @@
 import { scaler } from './utils';
 
 export class Renderer {
-  constructor(width, height, puzzle, target) {
-
-    // console.log('new Renderer()', this);
+  constructor(width, height, puzzle) {
 
     this.offset = scaler.inflate(3/2);
     this.width = width;
     this.height = height;
     this.puzzle = puzzle;
-    this.target = target;
 
     this.node = document.createElement('canvas');
     this.context = this.node.getContext(this.type);
@@ -23,18 +20,17 @@ export class Renderer {
     this.node.width = scaler.inflate(this.width + this.offset);
     this.node.height = scaler.inflate(this.height + this.offset);
     this.puzzle.render(this.context, this);
+
+    this.frame = requestAnimationFrame(() => {
+      this.render();
+    });
+
     return this;
 
   };
   appendTo(target) {
 
     target.append(this.node);
-    return this;
-
-  };
-  appendToTarget() {
-    
-    document.querySelector(this.target).append(this.node);
     return this;
 
   };

@@ -14,8 +14,7 @@
     "@capacitor/core": "latest",
     "@capacitor/ios": "latest",
     "@jamesrock/rockjs": "latest",
-    "sudoku-gen": "^1.0.2",
-    "swiper": "^12.1.2"
+    "sudoku-gen": "^1.0.2"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",

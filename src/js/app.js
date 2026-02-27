@@ -6,8 +6,8 @@ import {
 import {
   Rounder,
   setDocumentHeight,
-  createNode,
-  createButton,
+  makeNode,
+  makeButton,
   makeToggle,
   isValidKey,
   formatTime,
@@ -20,13 +20,13 @@ import { Renderer } from './Renderer';
 setDocumentHeight();
 
 const app = document.querySelector('#app');
-const footer = createNode('div', 'footer');
-const toggleContainer = createNode('form');
-const newGameButton = createButton('new');
+const footer = makeNode('div', 'footer');
+const toggleContainer = makeNode('form');
+const newGameButton = makeButton('new');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const puzzleSize = sqareSize*9;
-const solvedNode = createNode('div', 'solved');
-const eventsNode = createNode('div', 'events');
+const solvedNode = makeNode('div', 'solved');
+const eventsNode = makeNode('div', 'events');
 const rounder = new Rounder(40);
 const rotateKeys = ['Space'];
 const directionKeysMap = {
@@ -36,7 +36,7 @@ const directionKeysMap = {
   'ArrowRight': 'right'
 };
 const directionKeys = Object.keys(directionKeysMap);
-const board = createNode('div', 'board');
+const board = makeNode('div', 'board');
 let savedGame = storage.get('saved');
 let times = storage.get('times');
 let start = 0;

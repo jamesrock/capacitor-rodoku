@@ -4,16 +4,17 @@ import {
   getDefaultTime
 } from './utils';
 import {
+  Toggle,
   setDocumentHeight,
   addDragListeners,
   makeNode,
   makeButton,
-  makeToggle,
   isValidKey,
   formatTime,
   makeEven,
   limit,
-  append
+  append,
+  appendTo
 } from '@jamesrock/rockjs';
 import { Sudoku } from './Sudoku';
 import { Renderer } from './Renderer';
@@ -22,7 +23,7 @@ setDocumentHeight();
 
 const app = document.querySelector('#app');
 const footer = makeNode('div', 'footer');
-const toggleContainer = makeNode('form');
+const toggleContainer = makeNode('div');
 const newGameButton = makeButton('new');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
 const puzzleSize = sqareSize*9;
@@ -51,11 +52,11 @@ if(savedGame) {
   difficulty = savedGame[3];
 };
 
-const modeToggle = makeToggle(['standard', 'jigsaw'].map((value) => [value, value]), 'mode', mode);
-const difficultToggle = makeToggle(['easy', 'medium', 'hard'].map((value) => [value, value]), 'difficulty', difficulty);
+const modeToggle = new Toggle(['standard', 'jigsaw'].map((value) => [value, value]), 'mode', mode);
+const difficultToggle = new Toggle(['easy', 'medium', 'hard'].map((value) => [value, value]), 'difficulty', difficulty);
 
 append(app)(board)(solvedNode)(eventsNode);
-append(toggleContainer)(difficultToggle)(modeToggle);
+appendTo(toggleContainer)(difficultToggle)(modeToggle);
 append(footer)(toggleContainer)(newGameButton);
 append(app)(footer);
 
@@ -74,7 +75,7 @@ if(!times) {
   };
 };
 
-const getPuzzle = () => new Sudoku(mode, difficulty, solvedHandler, updateHandler, savedGame);
+const getPuzzle = () => new Sudoku(modeToggle.getValue(), difficultToggle.getValue(), solvedHandler, updateHandler, savedGame);
 
 const solvedHandler = () => {
   const time = (Date.now() - start);
@@ -179,19 +180,11 @@ document.addEventListener('keydown', (e) => {
 });
 
 toggleContainer.addEventListener('input', () => {
-
-  const data = new FormData(toggleContainer);
-	difficulty = data.get('difficulty');
-	mode = data.get('mode');
-
   startNewGame();
-
 });
 
 newGameButton.addEventListener('click', () => {
-
   startNewGame();
-
 });
 
 if(savedGame) {

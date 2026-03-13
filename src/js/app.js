@@ -12,7 +12,8 @@ import {
   isValidKey,
   formatTime,
   makeEven,
-  limit
+  limit,
+  append
 } from '@jamesrock/rockjs';
 import { Sudoku } from './Sudoku';
 import { Renderer } from './Renderer';
@@ -53,15 +54,10 @@ if(savedGame) {
 const modeToggle = makeToggle(['standard', 'jigsaw'].map((value) => [value, value]), 'mode', mode);
 const difficultToggle = makeToggle(['easy', 'medium', 'hard'].map((value) => [value, value]), 'difficulty', difficulty);
 
-app.append(board);
-app.append(solvedNode);
-app.append(eventsNode);
-
-toggleContainer.append(difficultToggle);
-toggleContainer.append(modeToggle);
-footer.append(toggleContainer);
-footer.append(newGameButton);
-app.append(footer);
+append(app)(board)(solvedNode)(eventsNode);
+append(toggleContainer)(difficultToggle)(modeToggle);
+append(footer)(toggleContainer)(newGameButton);
+append(app)(footer);
 
 if(!times) {
   times = {

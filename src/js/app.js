@@ -43,6 +43,7 @@ let puzzle = null;
 let mode = 'standard';
 let difficulty = 'easy';
 let moved = false;
+let gameOver = false;
 
 if(savedGame) {
   mode = savedGame[2];
@@ -91,7 +92,7 @@ const solvedHandler = () => {
     solvedNode.setAttribute('data-state', 'show');
     app.setAttribute('data-game-over', true);
   }, 250);
-  puzzle = null;
+  gameOver = true;
 };
 
 const updateHandler = () => {
@@ -126,6 +127,7 @@ const init = () => {
 
   puzzle = getPuzzle();
   start = Date.now();
+  gameOver = false;
 
   puzzle.appendTo(board).render();
 
@@ -136,7 +138,7 @@ addDragListeners(eventsNode, 40);
 eventsNode.addEventListener('touchend', () => {
 
   if(!moved) {
-    puzzle ? puzzle.fill() : startNewGame();
+    gameOver ? startNewGame() : puzzle.fill();
   };
 
   moved = false;
@@ -170,7 +172,7 @@ document.addEventListener('keydown', (e) => {
   };
 
   if(isValidKey(e.code, fillKeys)) {
-    puzzle ? puzzle.fill() : startNewGame();
+    gameOver ? startNewGame() : puzzle.fill();
   };
 
 });

@@ -1,7 +1,7 @@
 import { getSudoku } from 'sudoku-gen';
 import { puzzles } from './puzzles';
 import { scaler } from './utils';
-import { DisplayObject, getRandom, makeNode, isDarkMode } from '@jamesrock/rockjs';
+import { DisplayObject, getRandom, makeNode, isDarkMode, makeArray } from '@jamesrock/rockjs';
 
 const standardOverlay = [
   [[0, 0], [3, 0], [3, 3], [0, 3], [0, 0]],
@@ -103,10 +103,10 @@ export class Sudoku extends DisplayObject {
 
 		switch(mode) {
 			case 'allbutone':
-				this.clues = [0];
+				this.clues = makeArray(9*9, (a, index) => index>0 ? 1 : 0);
 			break;
 			case 'answers':
-				this.clues = [];
+				this.clues = makeArray(9*9, () => 1);
 			break;
 		};
 

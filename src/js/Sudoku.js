@@ -1,7 +1,7 @@
 import { getSudoku } from 'sudoku-gen';
 import { puzzles } from './puzzles';
 import { scaler } from './utils';
-import { getRandom, isDarkMode } from '@jamesrock/rockjs';
+import { DisplayObject, getRandom, makeNode, isDarkMode } from '@jamesrock/rockjs';
 
 const standardOverlay = [
   [[0, 0], [3, 0], [3, 3], [0, 3], [0, 0]],
@@ -49,14 +49,29 @@ const getColor = (key) => colors[isDarkMode() ? 'dark' : 'light'][key];
 const mode = 'play'; // 'allbutone', 'answers', 'play'
 const target = 'random'; // 'last', 'random'
 
-export class Sudoku {
-	constructor(type, difficulty, solvedHandler, updateHandler, saved) {
+export class Sudoku extends DisplayObject {
+	constructor(size, type, difficulty, solvedHandler, updateHandler, saved) {
+
+	  super();
 
 		let sudoku = null;
 
+		this.offset = scaler.inflate(3/2);
+    this.size = scaler.inflate(size);
+    this.width = this.height = (size*9);
+
+    this.node = makeNode('canvas');
+    this.ctx = this.node.getContext('2d');
+
+    this.node.width = scaler.inflate(this.width + this.offset);
+    this.node.height = scaler.inflate(this.height + this.offset);
+
+    this.node.style.width = `${scaler.deflate(this.node.width)}px`;
+    this.node.style.height = `${scaler.deflate(this.node.height)}px`;
+
 		switch(type) {
 			case 'standard':
-				
+
 				sudoku = saved ? saved[0] : getSudoku(difficulty);
 
 				this.overlay = standardOverlay;
@@ -105,95 +120,99 @@ export class Sudoku {
 		this.highlight();
 
 	};
-	render(ctx, renderer) {
-    
-		const size = scaler.inflate(renderer.width/9);
-		const offset = renderer.offset;
+	render() {
 
-		ctx.fillStyle = 'grey';
-		ctx.fillRect(
-			0 + offset, 
-			0 + offset, 
-			(size * 9), 
-			(size * 9)
+	  this.node.width = scaler.inflate(this.width + this.offset);
+    this.node.height = scaler.inflate(this.height + this.offset);
+
+		this.ctx.fillStyle = 'grey';
+		this.ctx.fillRect(
+			0 + this.offset,
+			0 + this.offset,
+			(this.size * 9),
+			(this.size * 9)
 		);
 
 		this.tiles.forEach((tile) => {
 
-			ctx.fillStyle = tile.highlight ? getColor('highlight') : getColor('background');
-			
-			ctx.fillRect(
-				(tile.x * size) + offset, 
-				(tile.y * size) + offset, 
-				size, 
-				size
+			this.ctx.fillStyle = tile.highlight ? getColor('highlight') : getColor('background');
+
+			this.ctx.fillRect(
+				(tile.x * this.size) + this.offset,
+				(tile.y * this.size) + this.offset,
+				this.size,
+				this.size
 			);
 
-			ctx.font = `900 ${size-10}px Poppins`;
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
-			ctx.fillStyle = tile.clue ? getColor('foreground') : getColor('input');
-			
-			ctx.fillText(
-				tile.display===0?'':tile.display, 
-				(tile.x * size) + (size/2) + offset, 
-				(tile.y * size) + ((size/2)+scaler.inflate(1)) + offset
+			this.ctx.font = `900 ${this.size-10}px Poppins`;
+			this.ctx.textAlign = 'center';
+			this.ctx.textBaseline = 'middle';
+			this.ctx.fillStyle = tile.clue ? getColor('foreground') : getColor('input');
+
+			this.ctx.fillText(
+				tile.display===0?'':tile.display,
+				(tile.x * this.size) + (this.size/2) + this.offset,
+				(tile.y * this.size) + ((this.size/2)+scaler.inflate(1)) + this.offset
 			);
 
 		});
 
 		this.overlay.forEach((coords) => {
 			coords.forEach((bob, index) => {
-				ctx.lineWidth = scaler.inflate(3);
-				ctx.lineCap = 'square';
-				ctx.strokeStyle = getColor('stroke');
-				ctx.moveTo(
-					(bob[0]*size) + offset, 
-					(bob[1]*size) + offset
+				this.ctx.lineWidth = scaler.inflate(3);
+				this.ctx.lineCap = 'square';
+				this.ctx.strokeStyle = getColor('stroke');
+				this.ctx.moveTo(
+					(bob[0]*this.size) + this.offset,
+					(bob[1]*this.size) + this.offset
 				);
 				if(coords[index+1]) {
-					ctx.lineTo(
-						(coords[index+1][0]*size) + offset, 
-						(coords[index+1][1]*size) + offset
+					this.ctx.lineTo(
+						(coords[index+1][0]*this.size) + this.offset,
+						(coords[index+1][1]*this.size) + this.offset
 					);
 				}
 				else {
-					ctx.stroke();
+					this.ctx.stroke();
 				};
 			});
 		});
 
 		[1, 2, 3, 4, 5, 6, 7, 8].forEach((x) => {
-			ctx.lineWidth = scaler.inflate(1);
-			ctx.lineCap = 'square';
-			ctx.moveTo(
-				(x*size) + offset,
-				offset
+			this.ctx.lineWidth = scaler.inflate(1);
+			this.ctx.lineCap = 'square';
+			this.ctx.moveTo(
+				(x*this.size) + this.offset,
+				this.offset
 			);
-			ctx.lineTo(
-				(x*size) + offset,
-				(9*size) + offset
+			this.ctx.lineTo(
+				(x*this.size) + this.offset,
+				(9*this.size) + this.offset
 			);
-			ctx.stroke();
+			this.ctx.stroke();
 		});
 
 		[1, 2, 3, 4, 5, 6, 7, 8].forEach((y) => {
-			ctx.lineWidth = scaler.inflate(1);
-			ctx.lineCap = 'square';
-			ctx.moveTo(
-				offset,
-				(y*size) + offset
+			this.ctx.lineWidth = scaler.inflate(1);
+			this.ctx.lineCap = 'square';
+			this.ctx.moveTo(
+				this.offset,
+				(y*this.size) + this.offset
 			);
-			ctx.lineTo(
-				(9*size) + offset,
-				(y*size) + offset
+			this.ctx.lineTo(
+				(9*this.size) + this.offset,
+				(y*this.size) + this.offset
 			);
-			ctx.stroke();
+			this.ctx.stroke();
 		});
+
+		this.frame = requestAnimationFrame(() => {
+      this.render();
+    });
 
 	};
 	getValues() {
-		
+
 		return this.data;
 
 	};
@@ -265,8 +284,22 @@ export class Sudoku {
 		return [this.data, this.values, this.type, this.difficulty];
 
 	};
+	stop() {
+
+    cancelAnimationFrame(this.frame);
+    return this;
+
+  };
+  destroy() {
+
+    this.stop();
+    this.node.parentNode.removeChild(this.node);
+    return this;
+
+  };
 	activeX = 0;
 	activeY = 0;
+	frame = 0;
 };
 
 class PuzzleTile {

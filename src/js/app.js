@@ -17,7 +17,6 @@ import {
   appendTo
 } from '@jamesrock/rockjs';
 import { Sudoku } from './Sudoku';
-import { Renderer } from './Renderer';
 
 setDocumentHeight();
 
@@ -26,10 +25,9 @@ const footer = makeNode('div', 'footer');
 const toggleContainer = makeNode('div');
 const newGameButton = makeButton('new');
 const sqareSize = makeEven(limit(Math.round(window.innerWidth / 10), 50));
-const puzzleSize = sqareSize*9;
 const solvedNode = makeNode('div', 'solved');
 const eventsNode = makeNode('div', 'events');
-const rotateKeys = ['Space'];
+const fillKeys = ['Space'];
 const directionKeysMap = {
   'ArrowUp': 'up',
   'ArrowDown': 'down',
@@ -42,7 +40,6 @@ let savedGame = storage.get('saved');
 let times = storage.get('times');
 let start = 0;
 let puzzle = null;
-let renderer = null;
 let mode = 'standard';
 let difficulty = 'easy';
 let moved = false;
@@ -75,7 +72,7 @@ if(!times) {
   };
 };
 
-const getPuzzle = () => new Sudoku(modeToggle.getValue(), difficultToggle.getValue(), solvedHandler, updateHandler, savedGame);
+const getPuzzle = () => new Sudoku(sqareSize, modeToggle.getValue(), difficultToggle.getValue(), solvedHandler, updateHandler, savedGame);
 
 const solvedHandler = () => {
   const time = (Date.now() - start);
@@ -121,17 +118,16 @@ const init = () => {
 
   solvedNode.setAttribute('data-state', 'hidden');
 
-  if(renderer) {
-    renderer.destroy();
+  if(puzzle) {
+    puzzle.destroy();
   };
 
   app.setAttribute('data-game-over', false);
 
-  renderer = new Renderer(puzzleSize, puzzleSize, getPuzzle());
-  puzzle = renderer.puzzle;
+  puzzle = getPuzzle();
   start = Date.now();
 
-  renderer.appendTo(board).render();
+  puzzle.appendTo(board).render();
 
 };
 
@@ -173,7 +169,7 @@ document.addEventListener('keydown', (e) => {
     puzzle.move(directionKeysMap[e.code]);
   };
 
-  if(isValidKey(e.code, rotateKeys)) {
+  if(isValidKey(e.code, fillKeys)) {
     puzzle ? puzzle.fill() : startNewGame();
   };
 
